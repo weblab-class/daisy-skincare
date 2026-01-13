@@ -1,0 +1,10 @@
+.App-container {
+  max-width: 960px;
+  padding: var(--m) var(--m);
+  margin: auto;
+
+  background-color: pink;
+  background-size: cover;
+  background-position: center;
+  min-height: 100vh;
+}
