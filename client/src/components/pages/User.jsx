@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Feed from "./Feed.jsx";
+import { Recent } from "../modules/Recent.jsx";
 
 import "../../utilities.css";
 import "./User.css";
@@ -23,7 +23,7 @@ const User = () => {
         </div>
         <div className="Profile-subContainer u-textCenter">
           <h4 className="Profile-subTitle">Recent Products Rated</h4>
-          <Feed />
+          <Recent />
         </div>
       </div>
     </>

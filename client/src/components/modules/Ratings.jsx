@@ -5,12 +5,6 @@ import { get, post } from "../../utilities.js";
 
 import "./Ratings.css";
 
-/** Ratings
- * @param id # of individual review
- * @param user name
- * @param individual review text content
- */
-
 const Ratings = (props) => {
   const [comments, setComments] = useState([]);
 
