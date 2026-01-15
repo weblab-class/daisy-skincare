@@ -40,11 +40,7 @@ const NewInput = (props) => {
 
 export const NewComment = (props) => {
   const addComment = (content) => {
-    props.addNewComment({
-        content: content,
-        creator_name: "Anonymous User",
-        _id: "random_id",
-        parent: props.reviewId});
+    props.addNewComment(content);
   };
 
   return <NewInput defaultText="New Comment" onSubmit={addComment} />;

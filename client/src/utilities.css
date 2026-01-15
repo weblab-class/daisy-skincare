@@ -33,6 +33,9 @@ body {
   font-weight: 600;
 }
 
+.spacer {
+  height: 100%;
+}
 
 /**
 form {

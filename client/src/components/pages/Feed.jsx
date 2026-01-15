@@ -1,28 +1,14 @@
 import React, { useState, useEffect } from "react";
 import Ratings from "../modules/Ratings";
+import { get } from "../../utilities.js";
 
 const Feed = () => {
   const [ratings, setRatings] = useState([]);
 
   useEffect(() => {
-    const review1 = {
-      _id: "id1",
-      creator_name: "user1",
-      content: "review1",
-    };
-    const review2 = {
-      _id: "id2",
-      creator_name: "user2",
-      content: "review2",
-    };
-    const review3 = {
-      _id: "id3",
-      creator_name: "user3",
-      content: "review3",
-    };
-    const hardcodedRatings = [review1, review2, review3];
-
-    setRatings(hardcodedRatings);
+    get("/api/ratings").then((ratings) => {
+      setRatings(ratings);
+    });
   }, []);
 
   let ratingsList = null;
@@ -33,8 +19,12 @@ const Feed = () => {
       <Ratings
         key={`Review_${reviewObj._id}`}
         _id={reviewObj._id}
-        creator_name={reviewObj.creator_name}
+        creator_name={reviewObj.user_name}
         content={reviewObj.content}
+        image={reviewObj.image}
+        product={reviewObj.product}
+        brand={reviewObj.brand}
+        rating_value={reviewObj.rating_value}
       />
     ));
 
@@ -43,7 +33,7 @@ const Feed = () => {
   }
 
   return (
-    <div>
+    <div className="Feed-container">
       {ratingsList}
     </div>
   );
