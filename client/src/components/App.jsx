@@ -1,11 +1,11 @@
 import React from "react";
 import "../utilities.css";
 import "./App.css";
+
+import Feed from "./pages/Feed"
 import homepage from "../assets/homepage.png";
 
-/**
- * Define the "App" component as a function.
- */
+/** Homepage */
 
 const App = () => {
   return (
@@ -15,6 +15,7 @@ const App = () => {
       style={{ backgroundImage: `url(${homepage})` }}
       >
         <h1>Skincare Website</h1>
+        <Feed />
       </div>
     </>
   );

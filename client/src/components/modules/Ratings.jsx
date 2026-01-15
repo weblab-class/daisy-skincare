@@ -1,0 +1,52 @@
+import React, { useState, useEffect } from "react";
+import SingleReview from "./SingleReview";
+import CommentsBlock from "./CommentsBlock";
+
+import "./Ratings.css";
+
+/** Ratings
+ * @param id # of individual review
+ * @param user name
+ * @param individual review text content
+ */
+
+const Ratings = (props) => {
+  const [comments, setComments] = useState([]);
+
+  const addNewComment = (comment) => {
+    setComments(comments.concat(comment));
+  };
+
+  useEffect(() => {
+    const comment1 = {
+      _id: "commentid1",
+      creator_name: "person1",
+      parent: "id1",
+      content: "comment1",
+    };
+    const comment2 = {
+      _id: "commentid2",
+      creator_name: "person2",
+      parent: "id2",
+      content: "comment2",
+    };
+    const comment3 = {
+      _id: "commentid3",
+      creator_name: "person3",
+      parent: "id3",
+      content: "comment3",
+    };
+    const hardcodedComments = [comment1, comment2, comment3];
+
+    setComments(hardcodedComments.filter((comment)=>comment.parent==props._id));
+  }, []);
+
+  return (
+    <div className="Review-container">
+      <SingleReview _id={props._id} creator_name={props.creator_name} content={props.content} />
+      <CommentsBlock review={props} comments={comments} addNewComment={addNewComment} />
+    </div>
+  );
+};
+
+export default Ratings;

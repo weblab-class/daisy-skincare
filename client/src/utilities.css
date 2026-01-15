@@ -8,12 +8,13 @@
 @import url("https://fonts.googleapis.com/css?family=Open+Sans:300,600");
 
 :root {
-  --primary: #396dff;
-  --primary--dim: #6987db;
-  --darkgrey: #d4d4d4;
+  /**
   --medgrey: #e0e0e0;
-  --grey: #f7f7f7;
+  --grey: #f7f7f7; */
   --white: #fff;
+  --primary: teal;
+  --darkgrey: #d4d4d4;
+  --aqua: #c2e8df;
 
   --xs: 4px;
   --s: 8px;
@@ -28,6 +29,12 @@ body {
   font-weight: 300;
 }
 
+.u-bold {
+  font-weight: 600;
+}
+
+
+/**
 form {
   flex-grow: 1;
 }
@@ -78,3 +85,4 @@ form {
 .u-link:hover {
   color: var(--primary--dim);
 }
+*/

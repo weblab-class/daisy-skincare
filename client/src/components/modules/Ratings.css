@@ -1,0 +1,29 @@
+.Review-container {
+  border: teal 1px solid;
+  border-radius: var(--xs);
+  margin-top: var(--m);
+}
+
+.Review-body,
+.Review-commentSection {
+  padding: var(--m) var(--l);
+}
+
+.Review-user {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.Review-content {
+  font-size: 40px;
+  margin: var(--s) 0 0;
+}
+
+.Review-commentSection {
+  background-color: var(--aqua);
+  border-top: 1px solid var(--darkgrey);
+}
+
+.Review-commentBody {
+  margin: 0 0 var(--s);
+}
