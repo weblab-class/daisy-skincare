@@ -6,6 +6,17 @@ from bs4 import BeautifulSoup
 import time
 import os
 
+def expand_all_accordions(driver):
+    buttons = driver.find_elements(By.CSS_SELECTOR, 'button[data-at="accordion_button"]')
+    for btn in buttons:
+        try:
+            driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", btn)
+            time.sleep(0.2)
+            if btn.get_attribute("aria-expanded") == "false":
+                btn.click()
+                time.sleep(0.4)
+        except:
+            pass
 
 def get_data(product_link, driver):
     """Get product information including name, price, ingredients, and category"""
@@ -29,6 +40,9 @@ def get_data(product_link, driver):
             return data_dic
 
         # Parse with BeautifulSoup
+        expand_all_accordions(driver)
+
+        time.sleep(1.5)
         soup = BeautifulSoup(driver.page_source, 'html.parser')
 
         # PRODUCT NAME
