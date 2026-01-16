@@ -189,18 +189,16 @@ def main():
 
                 print(f"✓ Updated CSV: {csv_path}")
             else:
-                print("✓ No new products to add")
+                print("No new products to add")
 
-            print(f"✓ Saved to: data/skincare_product_links.csv")
 
             with open('data/skincare_product_links.txt', 'w') as f:
                 for link in products:
                     f.write(f"{link}\n")
-            print(f"✓ Saved to: data/skincare_product_links.txt")
 
             print(f"{'='*70}")
         else:
-            print("\n❌ No products collected")
+            print("\n No products collected")
 
     finally:
         print("\nClosing browser...")
@@ -218,8 +216,6 @@ def filter_existing_products(new_links, csv_path):
     existing_links = set(existing_df['product_link'].dropna())
     filtered = [link for link in new_links if link not in existing_links]
 
-    print(f"✓ {len(existing_links)} existing products found")
-    print(f"✓ {len(filtered)} new products added")
 
     return filtered
 

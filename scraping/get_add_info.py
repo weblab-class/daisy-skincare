@@ -33,17 +33,9 @@ options.add_argument(
 driver = uc.Chrome(options=options)
 wait = WebDriverWait(driver, 20)
 
-
-print("\nStarting extraction...")
-print("=" * 80)
-
-# =========================
-# Helper: extract section text by <strong> label
-# =========================
 def extract_section(soup, label):
     label_re = re.compile(rf"^{label}\s*:?", re.I)
 
-    # ========= 1️⃣ <strong> based =========
     strong = soup.find("strong", string=label_re)
     if strong:
         texts = []
@@ -58,7 +50,6 @@ def extract_section(soup, label):
                     texts.append(t)
         return " ".join(texts).strip()
 
-    # ========= 2️⃣ <b> inline layout =========
     for b in soup.find_all("b"):
         if label_re.match(b.get_text(strip=True)):
             collected = []
@@ -88,9 +79,7 @@ def extract_main_image(soup):
     img = soup.select_one('img[src*="productimages"]')
     return img.get("src", "") if img else ""
 
-# =========================
-# Main Loop
-# =========================
+
 
 for i, row in df.iloc[81:82].iterrows():
     url = row['url']
@@ -119,50 +108,38 @@ for i, row in df.iloc[81:82].iterrows():
         time.sleep(2)
         soup = BeautifulSoup(driver.page_source, "html.parser")
 
-        # =========================
-        # Image (robust)
-        # =========================
+
         data["main_image_url"] = extract_main_image(soup)
         if data["main_image_url"]:
             print(f"  ✓ Image: {data['main_image_url']}...")
 
-
-        # =========================
-        # About the Product Fields
-        # =========================
+        # about the product section
         data["what_it_is"] = extract_section(soup, "What it is")
         data["skin_type"] = extract_section(soup, "Skin Type")
         data["skincare_concerns"] = extract_section(soup, "Skincare Concerns")
 
-        print("  ✓ What it is" if data["what_it_is"] else "  ✗ What it is")
-        print("  ✓ Skin Type" if data["skin_type"] else "  ✗ Skin Type")
-        print("  ✓ Concerns" if data["skincare_concerns"] else "  ✗ Concerns")
 
     except Exception as e:
-        print(f"  ❌ Error: {e}")
+        print(f"Error: {e}")
 
-    # Write results directly into dataframe
+    # add to dataframe
     df.at[i, "what_it_is"] = data["what_it_is"]
     df.at[i, "skin_type"] = data["skin_type"]
     df.at[i, "skincare_concerns"] = data["skincare_concerns"]
     df.at[i, "main_image_url"] = data["main_image_url"]
 
-    # Save incrementally (every product)
-    # Save every 20 products
+    # save every 40
     if (i + 1) % 40 == 0:
         df.to_csv(OUTPUT_PATH, index=False)
-        print(f"  💾 Checkpoint saved at {i+1} products")
+        print(f" Checkpoint saved at {i+1} products")
 
 
-    print("  💾 Saved progress")
+    print(" Saved progress")
     time.sleep(1.2)
 
 driver.quit()
 
-# =========================
-# Save Results
-# =========================
 
 df.to_csv(OUTPUT_PATH, index=False)
 
-print("\n✅ Saved to ./data/product_info_complete.csv")
+print("\n Saved to ./data/product_info_complete.csv")

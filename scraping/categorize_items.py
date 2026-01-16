@@ -1,122 +1,101 @@
 import pandas as pd
 from fuzzywuzzy import fuzz, process
 
-# Read the CSV
-df = pd.read_csv('./data/product_info.csv')
+df = pd.read_csv('./data/product_info_final.csv')
 
-# Define category keywords with their associated categories
-category_keywords = {
-    'Cleanser': [
-        'cleanser', 'cleansing', 'face wash', 'facial wash', 'gel cleanser',
-        'foam cleanser', 'cleansing balm', 'cleansing oil', 'makeup remover',
-        'micellar water', 'exfoliating cleanser'
-    ],
-    'Moisturizer': [
-        'moisturizer', 'cream', 'lotion', 'hydrating cream', 'face cream',
-        'day cream', 'night cream', 'gel cream', 'water cream', 'hydrator',
-        'moisturising', 'moisturising cream'
-    ],
-    'Serum': [
-        'serum', 'essence', 'concentrate', 'treatment', 'ampoule',
-        'booster', 'facial oil serum'
-    ],
-    'Face Mask': [
-        'mask', 'face mask', 'sheet mask', 'clay mask', 'sleeping mask',
-        'overnight mask', 'peel-off mask', 'gel mask'
-    ],
-    'Oil': [
-        'facial oil', 'face oil', 'oil', 'beauty oil', 'treatment oil',
-        'nourishing oil', 'dry oil'
-    ],
-    'Sunscreen': [
-        'sunscreen', 'spf', 'sun protection', 'uv protection', 'broad spectrum'
-    ],
-    'Toner': [
-        'toner', 'tonic', 'refresher', 'mist', 'facial spray', 'essence water'
-    ],
-    'Eye Care': [
-        'eye cream', 'eye serum', 'eye gel', 'under eye', 'eye treatment',
-        'eye balm', 'eye mask'
-    ],
-    'Lip Care': [
-        'lip', 'lip balm', 'lip treatment', 'lip mask', 'lip oil',
-        'lip scrub', 'lip gloss'
-    ],
-    'Body': [
-        'body lotion', 'body cream', 'body oil', 'body wash', 'body scrub',
-        'body butter', 'hand cream', 'foot cream'
-    ],
-    'Exfoliator': [
-        'exfoliant', 'exfoliating', 'scrub', 'peel', 'aha', 'bha',
-        'chemical exfoliant', 'physical exfoliant'
-    ],
-    'Neck & Décolleté': [
-        'neck cream', 'neck serum', 'décolleté', 'neck and chest',
-        'neck treatment', 'jawline'
-    ]
+'''
+main categories: moisturizers, lip balms & treatments, treatments, masks, cleansers, sunscreens, eye care
+
+subcategories
+moisturizer: face cream, mists & essences, night creams, face oils, decollete & neck creams
+lip balms & treatments: no sub (just put lip balms & treatments)
+treatments: face serums, blemish & acne treatmets, facial peels, exfoliators, toners
+masks: no sub
+cleansers: makeup removers, face wash & cleasers, face wipes
+sunscreens: spf over 30, spf 30 and under
+eye care: eye masks, eye creams & treatments
+
+'''
+
+categories = {
+    "moisturizers": {
+        "face cream": ["face cream", "cream", "moisturizer", "hydrating cream"],
+        "mists & essences": ["mist", "essence", "facial spray"],
+        "night creams": ["night cream", "overnight cream"],
+        "face oils": ["face oil", "facial oil"],
+        "decollete & neck creams": ["neck cream", "décolleté", "neck & chest"]
+    },
+
+    "lip balms & treatments": {
+        "lip balms & treatments": ["lip balm", "lip treatment", "lip mask", "lip oil", "lip scrub"]
+    },
+
+    "treatments": {
+        "face serums": ["serum", "ampoule", "booster"],
+        "blemish & acne treatments": ["acne", "blemish", "spot treatment"],
+        "facial peels": ["peel", "peeling"],
+        "exfoliators": ["exfoliant", "exfoliating", "aha", "bha", "scrub"],
+        "toners": ["toner", "tonic"]
+    },
+
+    "masks": {
+        "masks": ["mask", "sheet mask", "clay mask", "sleeping mask", "overnight mask"]
+    },
+
+    "cleansers": {
+        "makeup removers": ["makeup remover", "micellar"],
+        "face wash & cleansers": ["cleanser", "cleansing", "face wash"],
+        "face wipes": ["wipe", "cleansing wipe"]
+    },
+
+    "sunscreens": {
+        "spf over 30": ["spf 40", "spf 45", "spf 50", "spf 60", "spf 70"],
+        "spf 30 and under": ["spf 15", "spf 20", "spf 30", "spf 35",]
+    },
+
+    "eye care": {
+        "eye masks": ["eye mask"],
+        "eye creams & treatments": ["eye cream", "eye serum", "eye gel", "eye treatment"]
+    }
 }
 
-def categorize_product(product_name, fuzzy_threshold=70):
-    """
-    Categorize a product based on its name using fuzzy matching.
 
-    Args:
-        product_name: The product name to categorize
-        fuzzy_threshold: Minimum similarity score (0-100) to consider a match
+def categorize_product(name, threshold=70):
+    if pd.isna(name) or not name:
+        return "Unknown", "Unknown"
 
-    Returns:
-        Category name or 'Other' if no match found
-    """
-    if pd.isna(product_name) or product_name == '':
-        return 'Unknown'
+    name = name.lower()
 
-    product_name_lower = product_name.lower()
-
-    # Track best matches
     best_score = 0
-    best_category = 'Other'
+    best_category = "Other"
+    best_subcategory = None
 
-    # Check each category
-    for category, keywords in category_keywords.items():
-        for keyword in keywords:
-            # Use token_set_ratio for better partial matching
-            score = fuzz.token_set_ratio(keyword, product_name_lower)
+    for category, subs in categories.items():
+        for subcategory, keywords in subs.items():
+            for kw in keywords:
+                score = fuzz.token_set_ratio(kw, name)
 
-            # Also check if keyword is directly in the name (exact substring match)
-            if keyword in product_name_lower:
-                score = max(score, 95)  # Boost score for exact substring matches
+                if kw in name:
+                    score = 100
 
-            if score > best_score:
-                best_score = score
-                best_category = category
+                if score > best_score:
+                    best_score = score
+                    best_category = category
+                    best_subcategory = subcategory
 
-    # Only assign category if confidence is above threshold
-    if best_score >= fuzzy_threshold:
-        return best_category
-    else:
-        return 'Other'
+    if best_score < threshold:
+        return "Other", None
 
-# Apply categorization
-df['category'] = df['name'].apply(categorize_product)
+    return best_category, best_subcategory
 
-# Save the updated CSV
-df.to_csv('./data/product_info_categorized.csv', index=False)
 
-# Print category distribution
-print("\n=== Category Distribution ===")
-print(df['category'].value_counts())
+df[['category', 'subcategory']] = df['name'].apply(
+    lambda x: pd.Series(categorize_product(x))
+)
 
-print("\n=== Sample Categorizations ===")
-for idx, row in df.head(15).iterrows():
-    print(f"{row['category']:20} | {row['name'][:60]}")
 
-# Show products categorized as 'Other' for review
-print("\n=== Products Categorized as 'Other' ===")
+df.to_csv('./data/product_info_final_categorized.csv', index=False)
+
+
 other_products = df[df['category'] == 'Other']
-if len(other_products) > 0:
-    for idx, row in other_products.iterrows():
-        print(f"  - {row['name']}")
-else:
-    print("  None!")
-
-print(f"\n✅ Saved to './data/product_info_categorized.csv'")
+print(f"\n saved'")
