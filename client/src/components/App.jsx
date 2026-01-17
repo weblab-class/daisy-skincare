@@ -1,7 +1,8 @@
 import React from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, Link } from "react-router-dom";
 import "../utilities.css";
 import "./App.css";
+
 import homepage from "../assets/homepage.png";
 
 /** Homepage */

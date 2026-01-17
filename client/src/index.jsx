@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/client";
 import App from "./components/App";
 import Feed from "./components/pages/Feed";
 import NotFound from "./components/pages/NotFound";
-import Profile from "./components/pages/User";
+import User from "./components/pages/User";
 
 import {
   createBrowserRouter,
@@ -15,10 +15,13 @@ import {
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route errorElement={<NotFound />} element={<App />}>
-      <Route path="/" element={<Feed />}/>
-      <Route path="/profile" element={<Profile />}/>
-    </Route>
+    <>
+      <Route path="/" element={<App />}>
+        <Route index element={<Feed />}/>
+      </Route>
+      <Route path="/user" element={<User />}/>
+      <Route path="*" element={<NotFound />} />
+    </>
   )
 )
 
