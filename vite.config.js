@@ -1,14 +1,13 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import svgr from "vite-plugin-svgr";
-import path from "path";
 import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
   plugins: [react(), tailwindcss(), svgr()],
-  root: path.resolve(__dirname, "client"), // Set the root directory for Vite
+  root: "client", // Set the root directory for Vite
   build: {
-    outDir: path.resolve(__dirname, "client/dist"), // Output directory for production build
+    outDir: "dist", // Output directory for production build
   },
   server: {
     port: 5173,
