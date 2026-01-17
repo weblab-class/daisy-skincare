@@ -1,6 +1,6 @@
 /** Core Backend Server */
 
-require('dotenv').config();
+// require('dotenv').config();
 const express = require("express"); // backend framework for our node npm
 const path = require("path"); // provide utilities directory paths
 
