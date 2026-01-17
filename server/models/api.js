@@ -11,6 +11,7 @@ const express = require("express");
 
 // import models so we can interact with the database
 const User = require("./models/user");
+const Product = require("./models/product")
 
 // import authentication library
 const auth = require("./auth");
@@ -45,6 +46,57 @@ router.post("/initsocket", (req, res) => {
 // |------------------------------|
 // | write your API methods below!|
 // |------------------------------|
+
+// get all products
+router.get("/products",(req,res)=> {
+  Product.find({}).then((products)=> res.send(products));
+});
+
+// post new product
+router.post("/product", auth.ensureLoggedIn, (req,res)=>{
+  const newProduct = new Product({req.body})
+  newProduct.save().then((product)=> {res.send(product)})
+});
+
+// get products by category
+router.get("/products", async (req,res)=> {
+  try{
+    const {category,subcategory} = req.query
+    const filter = {};
+    if (category) {
+      filter.category = category
+    }
+    if (subcategory){
+      filter.subcategory = subcategory
+    }
+
+    const products = await Product.find(filter);
+    res.send(products)
+  } catch (err) {
+    console.log("error: ", err)
+    res.status(200)
+    res.send({})
+  }
+});
+
+// get products by brand
+router.get("/products", async(req,res)=>{
+  try{
+    const brand = req.query
+    const filter = {};
+    if (brand) {
+      filter.brand = brand
+    }
+    const products = await Product.find(filter);
+    res.send(products)
+  } catch (err) {
+    console.log("error: ", err)
+    res.status(200)
+    res.send({})
+  }
+})
+
+
 
 // anything else falls to this "not found" case
 router.all("*", (req, res) => {
