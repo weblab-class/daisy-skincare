@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "server/server.js",
+  "type": "commonjs",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -40,8 +41,12 @@
     "url-loader": "^4.1.1"
   },
   "devDependencies": {
+    "@tailwindcss/vite": "^4.1.18",
     "@vitejs/plugin-react-swc": "^3.0.0",
-    "vite": "^4.0.0",
-    "vite-plugin-svgr": "^2.4.0"
+    "autoprefixer": "^10.4.23",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.18",
+    "vite": "^5.2.0",
+    "vite-plugin-svgr": "^4.5.0"
   }
 }

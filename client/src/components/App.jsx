@@ -11,14 +11,12 @@ const App = () => {
   return (
     <>
       <div
-      className="App-container"
-      style={{ backgroundImage: `url(${homepage})` }}
+        className="App-container"
+        style={{ backgroundImage: `url(${homepage})` }}
       >
-        <h1>Skincare Website</h1>
-        <Link to="/user" className="User-link">
-          User Profile
-        </Link>
+        <h1 className="text-purple-500">Skincare Website</h1>
         <div class="spacer"></div>
+
         <Outlet />
       </div>
     </>
