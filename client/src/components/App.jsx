@@ -15,6 +15,9 @@ const App = () => {
         style={{ backgroundImage: `url(${homepage})` }}
       >
         <h1 className="text-purple-500">Skincare Website</h1>
+        <Link to="/user" className="User-link">
+          User Profile
+        </Link>
         <div class="spacer"></div>
 
         <Outlet />
