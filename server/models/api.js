@@ -47,56 +47,76 @@ router.post("/initsocket", (req, res) => {
 // | write your API methods below!|
 // |------------------------------|
 
-// get all products
-router.get("/products",(req,res)=> {
-  Product.find({}).then((products)=> res.send(products));
+// post new product
+router.post("/product", auth.ensureLoggedIn, async (req,res)=>{
+  try{
+    const newProduct = new Product(req.body);
+    newProduct.save().then((product)=> res.send(product));
+
+  } catch (err) {
+    console.error("error creating product: ", err)
+  }
 });
 
-// post new product
-router.post("/product", auth.ensureLoggedIn, (req,res)=>{
-  const newProduct = new Product({req.body})
-  newProduct.save().then((product)=> {res.send(product)})
-});
+// search filter
+const buildFilter = (query)=>{
+  const filter = {}
+  const fields = [
+      'category',
+      'subcategory',
+      'brand'];
+
+  fields.forEach((field) =>{
+    if (query[field]){
+      filter[field] = query[field]
+    }
+  })
+
+  // text search
+  if (query.search){
+    filter.$text = {$search: query.search}
+  }
+
+  // price range
+  if (query.minprice || query.maxprice){
+    filter.price = {};
+    if (query.minprice){
+      filter.price.$gte = Number(query.minprice)
+    }
+    if (query.maxprice){
+      filter.price.$lte = Number(query.maxprice)
+    }
+  }
+
+  // skin type
+  if (query.skin_type){
+    filter.skin_type = {
+      $in: query.skin_type.split(',')
+    };
+  }
+  // skin concern
+  if (query.skincare_concerns){
+    filter.skincare_concerns = {
+      $in: query.skincare_concerns.split(',')
+    };
+  }
+
+  return filter
+};
 
 // get products by category
 router.get("/products", async (req,res)=> {
   try{
-    const {category,subcategory} = req.query
-    const filter = {};
-    if (category) {
-      filter.category = category
-    }
-    if (subcategory){
-      filter.subcategory = subcategory
-    }
-
+    const filter = buildFilter(req.query);
     const products = await Product.find(filter);
     res.send(products)
+
   } catch (err) {
-    console.log("error: ", err)
-    res.status(200)
+    console.log("error getting product: ", err)
+    res.status(500)
     res.send({})
   }
 });
-
-// get products by brand
-router.get("/products", async(req,res)=>{
-  try{
-    const brand = req.query
-    const filter = {};
-    if (brand) {
-      filter.brand = brand
-    }
-    const products = await Product.find(filter);
-    res.send(products)
-  } catch (err) {
-    console.log("error: ", err)
-    res.status(200)
-    res.send({})
-  }
-})
-
-
 
 // anything else falls to this "not found" case
 router.all("*", (req, res) => {
