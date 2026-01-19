@@ -7,8 +7,10 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineConfig({
   plugins: [react(), tailwindcss(), svgr()],
   root: path.resolve(__dirname, "client"), // Set the root directory for Vite
+  root: "client", // Set the root directory for Vite
   build: {
     outDir: path.resolve(__dirname, "client/dist"), // Output directory for production build
+    outDir: "dist", // Output directory for production build
   },
   server: {
     port: 5173,
