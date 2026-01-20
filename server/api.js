@@ -2,6 +2,7 @@
 
 const express = require("express");
 const router = express.Router();
+const Product  = require("./models/product")
 
 
 router.get("/test", (req, res) => {
@@ -137,6 +138,7 @@ const buildFilter = (query)=>{
       $in: query.skin_type.split(',')
     };
   }
+
   // skin concern
   if (query.skincare_concerns){
     filter.skincare_concerns = {
@@ -144,8 +146,36 @@ const buildFilter = (query)=>{
     };
   }
 
+  // ingredient
+  if (query.ingredients){
+    filter.ingredients = {
+      $in: query.ingredients.split(',')
+    };
+  }
+
+  //highlighted_ingredients
+  if (query.highlighted_ingredients){
+    filter.highlighted_ingredientsingredients = {
+      $in: query.highlighted_ingredients.split(',')
+    };
+  }
+
   return filter
 };
+
+// implement GET /api/products/:id endpoint
+router.get("/products/:id",async (req,res)=> {
+  try{
+    const product = await Product.findById(req.params.id);
+    if (!product){
+      return res.status(404).send({error: 'product not found'})
+    }
+    res.send(product)
+  } catch (err){
+    console.log("error getting product: ", err)
+    res.status(500).send({error: 'couldnt get product'})
+  }
+})
 
 // implement GET /api/products endpoint
 router.get("/products", async (req,res)=> {
@@ -160,5 +190,6 @@ router.get("/products", async (req,res)=> {
     res.send({})
   }
 });
+
 
 module.exports = router;

@@ -4,6 +4,7 @@ import App from "./components/App";
 import Feed from "./components/pages/Feed";
 import NotFound from "./components/pages/NotFound";
 import User from "./components/pages/User";
+import Product from "./components/pages/Product"
 
 import {
   createBrowserRouter,
@@ -18,8 +19,9 @@ const router = createBrowserRouter(
     <>
       <Route path="/" element={<App />}>
         <Route index element={<Feed />}/>
+        <Route path="user" element={<User />}/>
       </Route>
-      <Route path="/user" element={<User />}/>
+
       <Route path="*" element={<NotFound />} />
     </>
   )

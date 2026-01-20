@@ -12,11 +12,13 @@ const ProductSchema = new mongoose.Schema({
     size: String,
 
     skin_type: [String],
-    concerns: [String],
+    skincare_concerns: [String],
     ingredients: [String],
+    highlighted_ingredients: [String],
 
     image_url: String,
-    product_url: String,
+    url: String,
+    what_it_is: String,
 })
 
 ProductSchema.index({ category: 1, subcategory: 1 });

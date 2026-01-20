@@ -23,10 +23,9 @@ const socketManager = require("./server-socket");
 // Server configuration below
 // TODO change connection URL after setting up your team database
 const mongoConnectionURL = process.env.MONGO_SRV;
-console.log("MONGO_SRV:", mongoConnectionURL);
 
 // TODO change database name to the name you chose
-const databaseName = "Database";
+const databaseName = "test";
 
 // mongoose 7 warning
 mongoose.set("strictQuery", false);

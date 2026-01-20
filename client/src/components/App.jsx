@@ -19,7 +19,7 @@ const App = () => {
           User Profile
         </Link>
         <div class="spacer"></div>
-        
+
         <Outlet />
       </div>
     </>
