@@ -98,11 +98,11 @@ def click_show_more_until_all_loaded(driver, expected_total=2643):
                     print(f"\nError clicking button: {e}")
                     break
             else:
-                print(f"\n✓ No more 'Show More' button found or button is disabled")
+                print(f"\nNo more 'Show More' button found or button is disabled")
                 break
 
         except Exception as e:
-            print(f"\n✓ Finished loading (no more button found)")
+            print(f"\nFinished loading (no more button found)")
             break
 
     return click_count
@@ -157,8 +157,6 @@ def main():
     """Main scraping function."""
     os.makedirs('data', exist_ok=True)
 
-    # Set up driver
-    print("Setting up undetected Chrome driver...")
     driver = setup_driver()
 
     try:
@@ -172,16 +170,13 @@ def main():
             print(f"{'='*70}")
             print(f"Total unique products: {len(products)}")
 
-            # Create DataFrame
             csv_path = 'data/skincare_product_links.csv'
 
-            # Remove duplicates already saved
             products = filter_existing_products(products, csv_path)
 
             if products:
                 df = pd.DataFrame({'product_link': products})
 
-                # Append if file exists, otherwise create
                 if os.path.exists(csv_path):
                     df.to_csv(csv_path, mode='a', header=False, index=False)
                 else:
