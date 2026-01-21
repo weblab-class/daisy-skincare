@@ -10,6 +10,7 @@
   border: var(--darkgrey) 1px solid;
   border-radius: var(--xs) 0 0 var(--xs);
   transition: box-shadow 0.1s;
+  margin-bottom: var(--s); /* Added margin for spacing between inputs */
 }
 
 .NewPostInput-button {
@@ -23,4 +24,21 @@
 .NewPostInput-button:hover {
   color: var(--white);
   background-color: var(--primary);
+}
+
+.NewInput-container {
+  display: flex;
+  flex-direction: column;
+  padding: var(--m);
+  margin: var(--m) 10%; /* Matches Review-container margin */
+  background-color: var(--white);
+  border: var(--darkgrey) 1px solid;
+  border-radius: var(--xs);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.NewInput-container h2 {
+  margin-top: 0;
+  margin-bottom: var(--m);
+  color: var(--primary);
 }
