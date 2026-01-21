@@ -5,11 +5,9 @@ import "../../utilities.css";
 import "./User.css";
 
 const User = () => {
-
   useEffect(() => {
     document.title = "User Profile Page";
   }, []);
-
   return (
     <>
       <div className="Profile-avatarContainer">

@@ -43,9 +43,7 @@ categories = {
     },
 
     "cleansers": {
-        "makeup removers": ["makeup remover", "micellar"],
         "face wash & cleansers": ["cleanser", "cleansing", "face wash"],
-        "face wipes": ["wipe", "cleansing wipe"]
     },
 
     "sunscreens": {
