@@ -15,7 +15,7 @@ router.get("/test", (req, res) => {
 const review1 = {
   _id: "id1",
   user_name: "Grace Choi",
-  rating_value: "6/10",
+  rating_value: "3/5",
   product: "toner",
   brand: "A",
   image: "/images/duckg.png",
@@ -25,7 +25,7 @@ const review1 = {
 const review2 = {
   _id: "id2",
   user_name: "Ellie Slaughter",
-  rating_value: "7/10",
+  rating_value: "4/5",
   product: "serum",
   brand: "B",
   image: "/images/ducke.png",
@@ -35,7 +35,7 @@ const review2 = {
 const review3 = {
   _id: "id3",
   user_name: "Sophia Song",
-  rating_value: "8/10",
+  rating_value: "5/5",
   product: "moisturizer",
   brand: "C",
   image: "/images/ducks.png",
@@ -50,8 +50,12 @@ router.get("/ratings", (req, res) => {
 
 // implement POST /api/ratings endpoint
 
-router.post("/review", (req, res) => {
+router.post("/rating", (req, res) => {
   const newReview = req.body;
+  // Add a unique _id and a user_name to the new review
+  newReview._id = `id${ratings.length + 1}`;
+  newReview.user_name = "New User"; // Hardcoded for now
+  newReview.rating_value = `${newReview.rating_value}/5`; // Format rating value
   ratings.push(newReview);
   res.send(newReview);
 })

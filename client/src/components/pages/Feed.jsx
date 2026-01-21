@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Ratings from "../modules/Ratings";
-import { get } from "../../utilities.js";
+import { get, post } from "../../utilities.js";
+import { NewReview } from "../modules/NewInput.jsx"; // Import NewReview
+
 
 const Feed = () => {
   const [ratings, setRatings] = useState([]);
@@ -10,6 +12,12 @@ const Feed = () => {
       setRatings(ratings);
     });
   }, []);
+
+  const submitNewReview = (reviewObj) => {
+    post("/api/rating", reviewObj).then((rating) => {
+      setRatings([rating, ...ratings]); // Add new rating to the top
+    });
+  };
 
   let ratingsList = null;
   const hasRatings = ratings.length !== 0;
@@ -27,13 +35,13 @@ const Feed = () => {
         rating_value={reviewObj.rating_value}
       />
     ));
-
   } else {
     ratingsList = <div>No ratings currently!</div>;
   }
 
   return (
     <div className="Feed-container">
+      <NewReview onSubmit={submitNewReview} /> {/* Render NewReview component */}
       {ratingsList}
     </div>
   );
