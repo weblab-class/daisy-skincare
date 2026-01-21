@@ -20,6 +20,7 @@ const router = createBrowserRouter(
       <Route path="/" element={<App />}>
         <Route index element={<Feed />}/>
         <Route path="user" element={<User />}/>
+        <Route path="product" element={<Product />}/>
       </Route>
 
       <Route path="*" element={<NotFound />} />

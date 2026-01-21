@@ -8,3 +8,17 @@
   background-position: center;
   min-height: 100vh;
 }
+
+.search-button {
+  padding: 10px 16px;
+  background: #7c3aed;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.search-button:hover {
+  background: #6a21d9;
+};
