@@ -1,170 +1,79 @@
-import React, { useState, useEffect } from "react";
-import { useParams } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import './Product.css';
 
-import "./Product.css";
+const Product = () => {
+  const [searchParams] = useSearchParams();
+  const searchQuery = searchParams.get('search') || '';
 
-const Product = ()=>{
-    const {productID} = useParams()
-    const[product,setProduct] = useState(null);
-    const[loading,setLoading] = useState(true);
-    const [error,setError] = useState(null)
-    const [showFullIngredients,setShowFullIngredients] = useState(false)
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-    useEffect(()=>{
-        loadProduct();
-    }, [productID]);
-
-
-const laodProduct = async()=>{
-    try{
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
         setLoading(true);
-        const response = await fetch(`/api/products/${productID}`)
+        // Adjust the URL to match your backend endpoint
+        const url = searchQuery
+          ? `http://localhost:3000/api/products?search=${searchQuery}`
+          : `http://localhost:3000/api/products`;
 
-        if (!response.ok){
-            throw new Error("failed to get product")
+        const response = await fetch(url);
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch products');
         }
 
         const data = await response.json();
-        setProduct(data);
-        setError(null);
-    } catch (err){
+        setProducts(data);
+      } catch (err) {
         setError(err.message);
-        console.log("coudln't load product");
-    } finally {
+      } finally {
         setLoading(false);
-    }
-}
+      }
+    };
 
-const toggleIngredients = ()=>{
-    setShowFullIngredients(!showFullIngredients)
-}
+    fetchProducts();
+  }, [searchQuery]); 
 
-const openProductUrl = ()=>{
-    if (product?.url){
-        window.open(product.url, '_blank')
-    }
-}
+  if (loading) {
+    return <div className="product-page"><p>Loading products...</p></div>;
+  }
 
-if (loading){
-    return (
-        <div className = "container">
-            <div className = "loading">Loading product...</div>
-        </div>
-    )
-}
+  if (error) {
+    return <div className="product-page"><p>Error: {error}</p></div>;
+  }
 
-if (error){
-    return(
-        <div className = "container">
-            <div className = 'error'> Error: {error}</div>
-        </div>
-    )
-}
+  return (
+    <div className="product-page">
+      {searchQuery && (
+        <h2>Search results for: "{searchQuery}"</h2>
+      )}
 
-if (!product){
-    return(
-        <div className = "container">
-            <div className = "error">Product not found</div>
-        </div>
-    )
-}
-
-return (
-    <div className = "container">
-        {/* heading */}
-        <div className = "header">
-            <div className = "product-image">
-                {product.image_url? (
-                    <img src = {product.image_url} alt = {product.name}/>
-                ):(
-                    <span>Product picture</span>
-                )}
+      {products.length === 0 ? (
+        <p>No products found {searchQuery && `matching "${searchQuery}"`}</p>
+      ) : (
+        <div className="products-grid">
+          {products.map(product => (
+            <div key={product._id} className="product-card">
+              <img
+                src={product.image || "https://via.placeholder.com/300"}
+                alt={product.name}
+                className="product-image"
+              />
+              <div className="product-info">
+                <h3>{product.name}</h3>
+                <p className="price">${product.price}</p>
+                <p className="description">{product.description}</p>
+                <button className="add-to-cart">View Details</button>
+              </div>
             </div>
-            <div className = "product-info">
-                <h1 className = "product-name"> {product.name} </h1>
-                <div className = "product-brand"> {product.brand}</div>
-                <div className = "product-price">
-                    ${product.price? product.price: 'N/A'}
-                </div>
-                <div className = 'product-size'> {product.size}</div>
-
-                {/* link button */}
-                <div className = "actions">
-                    <button className = 'action-btn' onClick = {openProductUrl}>
-                        <svg className = "link-icon" viewbox = " 0 0 24 24" fill = "none" strong = "currentColor" strokeWidth = "2">
-                            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
-                            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
-                        </svg>
-                        Product Link
-                    </button>
-                </div>
-
-                <div className = "rating-section">
-                    {/* TODO UPDATE LATER !!!! */}
-                    <span className = "rating-value"> Rating: N/A (no reviews yet)</span>
-                </div>
-                {product.what_it_is && (<div className = "description">{product.what_it_is}</div>)}
-            </div>
+          ))}
         </div>
-
-        {/* info */}
-        <div className = "info-grid">
-            <div className = "info-section">
-                <h3> Skincare Concerns</h3>
-                <ul>
-                    {product.skincare_concerns && product.skincare_concerns.length > 0 ? (
-                        product.skincare_concerns.map((concern, index) => (
-                            <li key={index}>{concern}</li>
-                        ))
-                    ) : (
-                        <li>No concerns listed</li>
-                    )}
-                </ul>
-            </div>
-
-            <div className = "info-section">
-                <h3>Skin Type</h3>
-                    <ul>
-                        {product.skin_type && product.skin_type.length > 0 ? (
-                            product.skin_type.map((type, index) => (
-                                <li key={index}>{type}</li>
-                            ))
-                        ) : (
-                            <li>No skin types listed</li>
-                        )}
-                    </ul>
-            </div>
-        </div>
-
-        {/* ingredients */}
-        <div className="ingredients-section">
-                <h3>Highlighted Ingredients</h3>
-                <div className="highlighted-ingredients">
-                    {product.highlighted_ingredients && product.highlighted_ingredients.length > 0 ? (
-                        product.highlighted_ingredients.map((ing, index) => (
-                            <div key={index} style={{ marginBottom: '8px' }}>{ing}</div>
-                        ))
-                    ) : (
-                        <div>No highlighted ingredients listed.</div>
-                    )}
-                </div>
-                <button className="see-more" onClick={toggleIngredients}>
-                    {showFullIngredients ? 'Hide ingredient list' : 'See full ingredient list'}
-                </button>
-
-                {showFullIngredients && (
-                    <div className="full-ingredients">
-                        {product.ingredients && product.ingredients.length > 0 ? (
-                            product.ingredients.join(', ')
-                        ) : (
-                            'No ingredients listed.'
-                        )}
-                    </div>
-                )}
-            </div>
-        </div>
-    );
+      )}
+    </div>
+  );
 };
 
 export default Product;
-

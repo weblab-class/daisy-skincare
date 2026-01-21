@@ -180,8 +180,20 @@ router.get("/products/:id",async (req,res)=> {
 // implement GET /api/products endpoint
 router.get("/products", async (req,res)=> {
   try{
-    const filter = buildFilter(req.query);
-    const products = await Product.find(filter);
+    const {search} = req.query;
+
+    let query = {};
+
+    if (search){
+      query = {
+        $or: [
+          {name: {$regex: search, $options: 'i'}},
+          {description: {$regex: search, $options: 'i'}}
+        ]
+      }
+    }
+
+    const products = await Product.find(query);
     res.send(products)
 
   } catch (err) {
