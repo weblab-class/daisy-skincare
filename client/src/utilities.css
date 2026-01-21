@@ -12,9 +12,9 @@
   --medgrey: #e0e0e0;
   --grey: #f7f7f7; */
   --white: #fff;
-  --primary: teal;
+  --primary: #c2e8df;
   --darkgrey: #d4d4d4;
-  --aqua: #c2e8df;
+  --aqua: #a4c4bc;
 
   --xs: 4px;
   --s: 8px;
@@ -27,6 +27,7 @@ body {
   padding: 0;
   font-family: "Open Sans", sans-serif;
   font-weight: 300;
+  background-color: var(--primary);
 }
 
 .u-bold {
@@ -38,43 +39,6 @@ body {
 }
 
 /**
-form {
-  flex-grow: 1;
-}
-
-.u-flex {
-  display: flex;
-}
-
-.u-flexColumn {
-  display: flex;
-  flex-direction: column;
-}
-
-.u-flex-justifyCenter {
-  justify-content: center;
-}
-
-.u-flex-alignCenter {
-  align-items: center;
-}
-
-.u-inlineBlock {
-  display: inline-block;
-}
-
-.u-bold {
-  font-weight: 600;
-}
-
-.u-textCenter {
-  text-align: center;
-}
-
-.u-relative {
-  position: relative;
-}
-
 .u-pointer {
   cursor: pointer;
 }

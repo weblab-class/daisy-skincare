@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import Ratings from "../modules/Ratings";
 import { get } from "../../utilities.js";
 
+import "./Feed.css";
+
 const Feed = () => {
   const [ratings, setRatings] = useState([]);
 

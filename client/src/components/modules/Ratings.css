@@ -3,6 +3,8 @@
   background-color: var(--white);
   border-radius: var(--xs);
   margin-top: var(--m);
+  margin-left: 10%;
+  margin-right: 10%;
 }
 
 .Review-body,
@@ -16,7 +18,7 @@
 }
 
 .Review-content {
-  font-size: 40px;
+  font-size: 18px;
   margin: var(--s) 0 0;
 }
 
@@ -27,4 +29,9 @@
 
 .Review-commentBody {
   margin: 0 0 var(--s);
+}
+
+.Review-image {
+  max-width: 150px;
+  height: auto;
 }
