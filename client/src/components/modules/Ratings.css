@@ -1,11 +1,23 @@
 .Review-container {
-  border: teal 1px solid;
   background-color: var(--white);
-  border-radius: var(--xs);
-  margin-top: var(--m);
-  margin-left: 10%;
-  margin-right: 10%;
+  display: flex;
+  align-items: stretch;
 }
+
+.Review-left,
+.Review-right {
+  flex: 0 0 400px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.Review-center {
+  flex: 1;
+  border: teal 1px solid;
+  border-radius: var(--m);
+}
+
 
 .Review-body,
 .Review-commentSection {
