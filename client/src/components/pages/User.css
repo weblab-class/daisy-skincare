@@ -1,5 +1,12 @@
+.user-page-wrapper {
+  padding: var(--m);
+  background: white;
+  min-height: 100vh;
+}
+
 .Profile-avatarContainer {
   padding: 0 35%;
+  margin-top: 0;
 }
 
 .Profile-avatar {
