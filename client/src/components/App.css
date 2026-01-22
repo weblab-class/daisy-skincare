@@ -1,13 +1,3 @@
 .App-container {
   background-color: var(--primary);
 }
-
-.App-home {
-  width: 100%;
-  height: 140vh;
-  margin: auto;
-
-  background-size: cover;
-  background-position: center;
-  min-height: 100vh;
-}

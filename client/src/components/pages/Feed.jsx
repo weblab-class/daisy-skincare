@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import Ratings from "../modules/Ratings";
 import { get, post } from "../../utilities.js";
 import { NewReview } from "../modules/NewInput.jsx"; // Import NewReview
+import homepage from "../../assets/homepage.png";
+import "./Feed.css";
 
 
 const Feed = () => {
@@ -40,10 +43,19 @@ const Feed = () => {
   }
 
   return (
-    <div className="Feed-container">
-      <NewReview onSubmit={submitNewReview} /> {/* Render NewReview component */}
-      {ratingsList}
-    </div>
+    <>
+      <div className="Feed-home" style={{ backgroundImage: `url(${homepage})` }}>
+        <h1>Skincare Website</h1>
+        <Link to="/user" className="User-link">
+          User Profile
+        </Link>
+        <div className="spacer"></div>
+      </div>
+      <div className="Feed-container">
+        <NewReview onSubmit={submitNewReview} />
+        {ratingsList}
+      </div>
+    </>
   );
 };
 
