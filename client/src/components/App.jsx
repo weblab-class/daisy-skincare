@@ -1,4 +1,5 @@
 import { Outlet, Link, useLocation } from "react-router-dom";
+import React from "react";
 import "../utilities.css";
 import "./App.css";
 import homepage from "../assets/homepage.png";
@@ -19,13 +20,15 @@ const App = () => {
         {isHomePage && (
           <>
             <h1 className="text-purple-500">Skincare Website</h1>
-            <Link to="/product" className="browse-link">
+            {/* <Link to="/product" className="browse-link">
               Browse Products
             </Link>
             <Link to="/user" className="User-link">
               User Profile
-            </Link>
+            </Link> */}
             <div className="spacer"></div>
+
+            <Outlet />
           </>
         )}
 

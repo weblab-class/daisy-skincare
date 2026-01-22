@@ -4,9 +4,21 @@ import CommentsBlock from "./CommentsBlock";
 import { get, post } from "../../utilities.js";
 
 import "./Ratings.css";
+import flower from "../../assets/margins/margin-flower.png";
+import tie from "../../assets/margins/margin-tie.png";
+import small from "../../assets/margins/margin-small.png";
+import swim from "../../assets/margins/margin-swim.png";
+
+const ducks = [flower, tie, small, swim];
+
+function getRandomDuck() {
+  return ducks[Math.floor(Math.random() * ducks.length)];
+}
 
 const Ratings = (props) => {
   const [comments, setComments] = useState([]);
+  const [leftDuck] = useState(getRandomDuck);
+  const [rightDuck] = useState(getRandomDuck);
 
   const addNewComment = (content) => {
     const body = { parent: props._id, content: content };
@@ -23,7 +35,11 @@ const Ratings = (props) => {
 
   return (
     <div className="Review-container">
-      <SingleReview
+      <div className="Review-left">
+        <img src={leftDuck} className="Review-duck" alt="decoration" />
+      </div>
+      <div className="Review-center">
+        <SingleReview
         _id={props._id}
         creator_name={props.creator_name}
         content={props.content}
@@ -32,7 +48,15 @@ const Ratings = (props) => {
         brand={props.brand}
         rating_value={props.rating_value}
       />
-      <CommentsBlock review={props} comments={comments} addNewComment={addNewComment} />
+      <CommentsBlock
+        review={props}
+        comments={comments}
+        addNewComment={addNewComment}
+      />
+      </div>
+      <div className="Review-right">
+        <img src={rightDuck} className="Review-duck" alt="decoration" />
+      </div>
     </div>
   );
 };

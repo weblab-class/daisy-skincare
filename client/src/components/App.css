@@ -1,7 +1,6 @@
 .App-container {
   width: 100%;
-  height: 150vh;
-  padding: var(--s) var(--m);
+  height: 140vh;
   margin: auto;
 
   background-size: cover;
@@ -19,7 +18,7 @@
   cursor: pointer;
 }
 
-.search-button:hover {
+/* .search-button:hover {
   background: rgb(96, 133, 252);
 }
 
@@ -52,23 +51,10 @@
   box-shadow: 0 2px 8px rgba(124, 58, 237, 0.2);
 }
 
-/* .browse-link {
-  display: inline-block;
-  padding: 12px 24px;
-  background: #7c3aed;
-  color: white;
-  text-decoration: none;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 500;
-  margin: 20px auto;
-  transition: background 0.2s;
-} */
-
 .browse-link:hover {
   background: rgb(149, 173, 255);
 }
 
 .User-link:hover {
   background: rgb(149, 173, 255);
-}
+} */

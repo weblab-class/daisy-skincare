@@ -1,9 +1,23 @@
 .Review-container {
-  border: teal 1px solid;
   background-color: var(--white);
-  border-radius: var(--xs);
-  margin-top: var(--m);
+  display: flex;
+  align-items: stretch;
 }
+
+.Review-left,
+.Review-right {
+  flex: 0 0 400px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.Review-center {
+  flex: 1;
+  border: teal 1px solid;
+  border-radius: var(--m);
+}
+
 
 .Review-body,
 .Review-commentSection {
@@ -16,7 +30,7 @@
 }
 
 .Review-content {
-  font-size: 40px;
+  font-size: 18px;
   margin: var(--s) 0 0;
 }
 
@@ -27,4 +41,9 @@
 
 .Review-commentBody {
   margin: 0 0 var(--s);
+}
+
+.Review-image {
+  max-width: 150px;
+  height: auto;
 }
