@@ -10,16 +10,16 @@ import homepage from "../assets/homepage.png";
 const App = () => {
   return (
     <>
-      <div
-        className="App-container"
+      <div className="App-container">
+        <div className="App-home"
         style={{ backgroundImage: `url(${homepage})` }}
-      >
-        <h1 className="text-purple-500">Skincare Website</h1>
+        >
+        <h1>Skincare Website</h1>
         <Link to="/user" className="User-link">
           User Profile
         </Link>
         <div class="spacer"></div>
-
+        </div>
         <Outlet />
       </div>
     </>
