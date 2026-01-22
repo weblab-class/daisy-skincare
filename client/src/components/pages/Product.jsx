@@ -1,23 +1,38 @@
 import { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import './Product.css';
 
 const Product = () => {
   const [searchParams] = useSearchParams();
   const searchQuery = searchParams.get('search') || '';
+  const navigate = useNavigate();
+  const [inputQuery, setInputQuery] = useState(searchQuery);
 
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (inputQuery.trim()) {
+      navigate(`/product?search=${encodeURIComponent(inputQuery)}`);
+    }
+  };
+
+  useEffect(() => {
+    setInputQuery(searchQuery);
+  }, [searchQuery]);
+
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        // Adjust the URL to match your backend endpoint
+        setError(null);
+
+        // Use relative URL to avoid CORS issues
         const url = searchQuery
-          ? `http://localhost:3000/api/products?search=${searchQuery}`
-          : `http://localhost:3000/api/products`;
+          ? `/api/products?search=${encodeURIComponent(searchQuery)}`
+          : `/api/products`;
 
         const response = await fetch(url);
 
@@ -26,47 +41,71 @@ const Product = () => {
         }
 
         const data = await response.json();
-        setProducts(data);
+        setProducts(Array.isArray(data) ? data : []);
       } catch (err) {
+        console.error('Error fetching products:', err);
         setError(err.message);
+        // Set empty array on error so UI still renders
+        setProducts([]);
       } finally {
         setLoading(false);
       }
     };
 
     fetchProducts();
-  }, [searchQuery]); 
-
-  if (loading) {
-    return <div className="product-page"><p>Loading products...</p></div>;
-  }
-
-  if (error) {
-    return <div className="product-page"><p>Error: {error}</p></div>;
-  }
+  }, [searchQuery]);
 
   return (
     <div className="product-page">
+      <h1 className="product-page-title">Browse Products</h1>
+      <form onSubmit={handleSearch} className="search-form">
+        <input
+          type="text"
+          placeholder="Search for products..."
+          value={inputQuery}
+          onChange={(e) => setInputQuery(e.target.value)}
+          className="search-input"
+        />
+        <button type="submit" className="search-button">Search</button>
+      </form>
+
       {searchQuery && (
         <h2>Search results for: "{searchQuery}"</h2>
       )}
 
-      {products.length === 0 ? (
-        <p>No products found {searchQuery && `matching "${searchQuery}"`}</p>
-      ) : (
+      {loading && (
+        <div className="loading-message">
+          <p>Loading products...</p>
+        </div>
+      )}
+
+      {error && !loading && (
+        <div className="error-message">
+          <p>Error: {error}</p>
+          <p>Please try again or check if the server is running.</p>
+        </div>
+      )}
+
+      {!loading && products.length === 0 && !error && (
+        <p className="no-products">No products found {searchQuery && `matching "${searchQuery}"`}</p>
+      )}
+
+      {!loading && products.length > 0 && (
         <div className="products-grid">
           {products.map(product => (
             <div key={product._id} className="product-card">
               <img
-                src={product.image || "https://via.placeholder.com/300"}
+                src={product.image_url || "https://via.placeholder.com/300"}
                 alt={product.name}
                 className="product-image"
               />
               <div className="product-info">
                 <h3>{product.name}</h3>
-                <p className="price">${product.price}</p>
-                <p className="description">{product.description}</p>
-                <button className="add-to-cart">View Details</button>
+                <p className="price">${product.price || 'N/A'}</p>
+                <p className="description">{product.what_it_is || 'No description available'}</p>
+                <Link to={`/product-page/${product._id}`} className="browse-link">
+                  View details
+                </Link>
               </div>
             </div>
           ))}

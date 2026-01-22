@@ -188,7 +188,7 @@ router.get("/products", async (req,res)=> {
       query = {
         $or: [
           {name: {$regex: search, $options: 'i'}},
-          {description: {$regex: search, $options: 'i'}}
+          {what_it_is: {$regex: search, $options: 'i'}}
         ]
       }
     }

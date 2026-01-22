@@ -9,7 +9,7 @@ const User = () => {
     document.title = "User Profile Page";
   }, []);
   return (
-    <>
+    <div className="user-page-wrapper">
       <div className="Profile-avatarContainer">
         <div className="Profile-avatar" />
       </div>
@@ -24,7 +24,7 @@ const User = () => {
           <Recent />
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

@@ -1,5 +1,4 @@
-import {useState} from "react";
-import { Outlet, Link, useNavigate} from "react-router-dom";
+import { Outlet, Link, useLocation } from "react-router-dom";
 import "../utilities.css";
 import "./App.css";
 import homepage from "../assets/homepage.png";
@@ -8,39 +7,27 @@ import homepage from "../assets/homepage.png";
 /** Homepage */
 
 const App = () => {
-  // search bar for products
-  const [searchQuery, setSearchQuery] = useState('');
-  const navigate = useNavigate();
-
-  const handleSearch = (e)=>{
-    e.preventDefault();
-    if (searchQuery.trim()){
-      navigate(`/product?search=${searchQuery}`); // go to product page w search query
-    }
-  };
+  const location = useLocation();
+  const isHomePage = location.pathname === '/';
 
   return (
     <>
       <div
         className="App-container"
-        style={{ backgroundImage: `url(${homepage})` }}
+        style={isHomePage ? { backgroundImage: `url(${homepage})` } : { padding: 0 }}
       >
-        <h1 className="text-purple-500">Skincare Website</h1>
-        < form onSubmit = {handleSearch} className = 'search-form'>
-          <input
-            type = "text"
-            placeholder = "Search for products..."
-            value = {searchQuery}
-            onChange = {(e)=> setSearchQuery(e.target.value)}
-            className = "search-input"
-          />
-          <button type = "submit" className = "search-button">Search</button>
-        </form>
-
-        <Link to="/user" className="User-link">
-          User Profile
-        </Link>
-        <div className ="spacer"></div>
+        {isHomePage && (
+          <>
+            <h1 className="text-purple-500">Skincare Website</h1>
+            <Link to="/product" className="browse-link">
+              Browse Products
+            </Link>
+            <Link to="/user" className="User-link">
+              User Profile
+            </Link>
+            <div className="spacer"></div>
+          </>
+        )}
 
         <Outlet />
       </div>
