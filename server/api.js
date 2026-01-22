@@ -184,20 +184,8 @@ router.get("/products/:id",async (req,res)=> {
 // implement GET /api/products endpoint
 router.get("/products", async (req,res)=> {
   try{
-    const {search} = req.query;
-
-    let query = {};
-
-    if (search){
-      query = {
-        $or: [
-          {name: {$regex: search, $options: 'i'}},
-          {what_it_is: {$regex: search, $options: 'i'}}
-        ]
-      }
-    }
-
-    const products = await Product.find(query);
+    const filter = buildFilter(req.query);
+    const products = await Product.find(filter);
     res.send(products)
 
   } catch (err) {
