@@ -9,12 +9,7 @@ import homepage from "../assets/homepage.png";
 const App = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
-<<<<<<< HEAD
-  const isHomePage = location.pathname === "/";
-=======
   const isHomePage = location.pathname === '/';
-  const [isOpen, setIsOpen] = useState(false);
->>>>>>> refs/remotes/origin/main
 
   return (
     <>
@@ -52,14 +47,14 @@ const App = () => {
         >
           <nav className="flex flex-col gap-6 mt-24 px-8 text-purple-600 font-bold text-xl">
             <Link
-              to="/"
+              to="user"
               onClick={() => setIsOpen(false)}
               className="hover:text-purple-400"
             >
               Profile
             </Link>
             <Link
-              to="product-page/:productID"
+              to="product"
               onClick={() => setIsOpen(false)}
               className="hover:text-purple-400"
             >
