@@ -9,11 +9,19 @@ const User = () => {
     document.title = "User Profile Page";
   }, []);
   return (
-    <>
-      {/** profile header */}
-      <div className="Profile-header">
-        <div className="Profile-avatarContainer">
-          <div className="Profile-avatar" />
+    <div className="user-page-wrapper">
+      <div className="Profile-avatarContainer">
+        <div className="Profile-avatar" />
+      </div>
+      <h1 className="Profile-name u-textCenter">Anonymous User</h1>
+      <hr className="Profile-line" />
+      <div className="u-flex">
+        <div id="profile-description">
+          beli but for skincare user
+        </div>
+        <div className="Profile-subContainer u-textCenter">
+          <h4 className="Profile-subTitle">Recent Products Rated</h4>
+          <Recent />
         </div>
         <h1 className="Profile-name">Anonymous User</h1>
         <hr className="Profile-line" />
@@ -24,7 +32,7 @@ const User = () => {
         <h4 className="Profile-subTitle">Recent Products Rated</h4>
         <Recent />
       </div>
-    </>
+    </div>
   );
 };
 
