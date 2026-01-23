@@ -87,6 +87,15 @@ const App = () => {
         </main>
         <Outlet />
       </div>
+      <Link to="/product" className="browse-link">
+          Browse Product
+      </Link>
+      <Link to="/user" className="User-link">
+          hgjhgjhgbjhbje
+      </Link>
+      <div className = "spacer"></div>
+      <Outlet />
+
     </>
   );
 };
