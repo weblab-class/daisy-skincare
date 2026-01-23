@@ -9,7 +9,12 @@ import homepage from "../assets/homepage.png";
 const App = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+<<<<<<< HEAD
   const isHomePage = location.pathname === "/";
+=======
+  const isHomePage = location.pathname === '/';
+  const [isOpen, setIsOpen] = useState(false);
+>>>>>>> refs/remotes/origin/main
 
   return (
     <>
@@ -90,6 +95,15 @@ const App = () => {
         {/*Space for rendering other pages*/}
         <Outlet />
       </div>
+      <Link to="/product" className="browse-link">
+          Browse Product
+      </Link>
+      <Link to="/user" className="User-link">
+          hgjhgjhgbjhbje
+      </Link>
+      <div className = "spacer"></div>
+      <Outlet />
+
     </>
   );
 };

@@ -140,13 +140,45 @@ return (
         <div className="ingredients-section">
                 <h3>Highlighted Ingredients</h3>
                 <div className="highlighted-ingredients">
-                    {product.highlighted_ingredients && product.highlighted_ingredients.length > 0 ? (
-                        product.highlighted_ingredients.map((ing, index) => (
-                            <div key={index} style={{ marginBottom: '8px' }}>{ing}</div>
-                        ))
-                    ) : (
-                        <div>No highlighted ingredients listed.</div>
-                    )}
+                    {(() => {
+                        // Normalize highlighted_ingredients to always be an array
+                        let ingredientsArray = [];
+
+                        if (product.highlighted_ingredients) {
+                            if (Array.isArray(product.highlighted_ingredients)) {
+                                // If it's already an array, process each element
+                                ingredientsArray = product.highlighted_ingredients.flatMap(ing => {
+                                    if (typeof ing === 'string') {
+                                        // Split on " -" (space-dash) pattern - this handles cases like
+                                        // "ingredient1 -ingredient2" or "ingredient1 - ingredient2"
+                                        const parts = ing.split(/\s+-/).map(item => {
+                                            // Remove leading dash if present and trim
+                                            return item.replace(/^-\s*/, '').trim();
+                                        }).filter(item => item);
+                                        return parts;
+                                    }
+                                    return ing ? [String(ing).trim()] : [];
+                                }).filter(item => item);
+                            } else if (typeof product.highlighted_ingredients === 'string') {
+                                // If it's a string, split on " -" (space-dash) pattern
+                                ingredientsArray = product.highlighted_ingredients
+                                    .split(/\s+-/)
+                                    .map(item => {
+                                        // Remove leading dash if present and trim
+                                        return item.replace(/^-\s*/, '').trim();
+                                    })
+                                    .filter(item => item);
+                            }
+                        }
+
+                        return ingredientsArray.length > 0 ? (
+                            ingredientsArray.map((ing, index) => (
+                                <div key={index} className="ingredient-item">{ing}</div>
+                            ))
+                        ) : (
+                            <div>No highlighted ingredients listed.</div>
+                        );
+                    })()}
                 </div>
                 <button className="see-more" onClick={toggleIngredients}>
                     {showFullIngredients ? 'Hide ingredient list' : 'See full ingredient list'}
