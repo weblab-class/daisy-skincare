@@ -143,7 +143,7 @@ return (
                     {(() => {
                         // Normalize highlighted_ingredients to always be an array
                         let ingredientsArray = [];
-                        
+
                         if (product.highlighted_ingredients) {
                             if (Array.isArray(product.highlighted_ingredients)) {
                                 // If it's already an array, process each element
@@ -170,7 +170,7 @@ return (
                                     .filter(item => item);
                             }
                         }
-                        
+
                         return ingredientsArray.length > 0 ? (
                             ingredientsArray.map((ing, index) => (
                                 <div key={index} className="ingredient-item">{ing}</div>
