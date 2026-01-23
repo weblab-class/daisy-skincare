@@ -26,4 +26,4 @@ ProductSchema.index({ brand: 1 });
 ProductSchema.index({ price: 1 });
 ProductSchema.index({ name: "text" });
 
-module.exports =  mongoose.model("Product",ProductSchema)
+module.exports =  mongoose.model("Product", ProductSchema)
