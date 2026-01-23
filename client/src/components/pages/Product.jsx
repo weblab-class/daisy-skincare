@@ -103,7 +103,7 @@ const Product = () => {
                 <h3>{product.name}</h3>
                 <p className="price">${product.price || 'N/A'}</p>
                 <p className="description">{product.what_it_is || 'No description available'}</p>
-                <Link to={`/product-page/${product._id}`} className="browse-link">
+                <Link to={`/product/${product._id}`} className="browse-link">
                   View details
                 </Link>
               </div>

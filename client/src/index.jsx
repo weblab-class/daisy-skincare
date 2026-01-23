@@ -19,16 +19,10 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <>
       <Route path="/" element={<App />}>
-<<<<<<< HEAD
-        <Route index element={<Feed />} />
-        <Route path="user" element={<User />} />
-        <Route path="product-page/:productID" element={<ProductPage />} />
-=======
         <Route index element={<Feed />}/>
         <Route path="user" element={<User />}/>
         <Route path="product" element={<Product />}/>
         <Route path="product/:productID" element={<ProductPage />}/>
->>>>>>> refs/remotes/origin/main
       </Route>
 
       <Route path="*" element={<NotFound />} />
