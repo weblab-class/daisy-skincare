@@ -1,15 +1,12 @@
-.Profile-header {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  color: black;
-  max-width: 800px;
-  margin: 0 auto;
+.user-page-wrapper {
+  padding: var(--m);
+  background: white;
+  min-height: 100vh;
 }
 
 .Profile-avatarContainer {
-  width: 200px;
-  margin-top: 2em;
+  padding: 0 35%;
+  margin-top: 0;
 }
 
 .Profile-avatar {
