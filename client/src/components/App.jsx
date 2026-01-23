@@ -10,6 +10,7 @@ import homepage from "../assets/homepage.png";
 const App = () => {
   const location = useLocation();
   const isHomePage = location.pathname === '/';
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <>
