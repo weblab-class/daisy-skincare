@@ -4,8 +4,8 @@
 * for colors; and styles to html, body, and other high level
 * DOMs.
 */
-@import "tailwindcss";
 @import url("https://fonts.googleapis.com/css?family=Open+Sans:300,600");
+@import "tailwindcss";
 
 :root {
   /**

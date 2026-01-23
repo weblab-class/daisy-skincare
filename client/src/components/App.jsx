@@ -1,6 +1,5 @@
 import { Outlet, Link, useLocation } from "react-router-dom";
 import React from "react";
-import { Outlet } from "react-router-dom";
 import "../utilities.css";
 import "./App.css";
 
