@@ -1,15 +1,15 @@
 import React, { useState } from "react";
-import { Outlet, Link, useLocation } from "react-router-dom";
+import { Routes, Route, Outlet, Link, useLocation } from "react-router-dom";
 import "../utilities.css";
 import "./App.css";
 import homepage from "../assets/homepage.png";
 
-
 /** Homepage */
 
 const App = () => {
+  const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
-  const isHomePage = location.pathname === '/';
+  const isHomePage = location.pathname === "/";
 
   return (
     <>
@@ -54,7 +54,7 @@ const App = () => {
               Profile
             </Link>
             <Link
-              to="products"
+              to="product-page/:productID"
               onClick={() => setIsOpen(false)}
               className="hover:text-purple-400"
             >
@@ -77,14 +77,17 @@ const App = () => {
           />
         )}
 
-        {/* White cursive title */}
-        <main className="relative flex flex-col items-center justify-start min-h-screen text-center px-4">
-          <div className="space-y-2">
-            <h1 className="text-6xl md:text-8xl font-serif text-white tracking-tighter italic drop-shadow-lg">
-              Skincare Website{" "}
-            </h1>
-          </div>
-        </main>
+        {/* White cursive title that only shows on homepage*/}
+        {isHomePage && (
+          <main className="relative flex flex-col items-center justify-start min-h-screen text-center px-4">
+            <div className="space-y-2">
+              <h1 className="text-6xl md:text-8xl font-serif text-white tracking-tighter italic drop-shadow-lg">
+                Skincare Website{" "}
+              </h1>
+            </div>
+          </main>
+        )}
+        {/*Space for rendering other pages*/}
         <Outlet />
       </div>
     </>

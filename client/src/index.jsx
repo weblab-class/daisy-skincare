@@ -12,25 +12,24 @@ import {
   createRoutesFromElements,
   Route,
   RouterProvider,
-  useNavigate
-} from 'react-router-dom'
+  useNavigate,
+} from "react-router-dom";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
       <Route path="/" element={<App />}>
-        <Route index element={<Feed />}/>
-        <Route path="user" element={<User />}/>
-        <Route path="product" element={<Product />}/>
-        <Route path="product-page/:productID" element={<ProductPage />}/>
+        <Route index element={<Feed />} />
+        <Route path="user" element={<User />} />
+        <Route path="product-page/:productID" element={<ProductPage />} />
       </Route>
 
       <Route path="*" element={<NotFound />} />
-    </>
-  )
-)
+    </>,
+  ),
+);
 
 // renders React Component "Root"
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <RouterProvider router={router} />
+  <RouterProvider router={router} />,
 );
