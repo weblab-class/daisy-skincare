@@ -37,19 +37,3 @@ body {
 .spacer {
   height: 100%;
 }
-
-/**
-.u-pointer {
-  cursor: pointer;
-}
-
-.u-link {
-  color: var(--primary);
-  text-decoration: none;
-  cursor: pointer;
-}
-
-.u-link:hover {
-  color: var(--primary--dim);
-}
-*/
