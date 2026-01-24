@@ -1,9 +1,6 @@
-.Feed-home {
+.Feed-container {
   width: 100%;
-  height: 140vh;
   margin: auto;
 
-  background-size: cover;
-  background-position: center;
-  min-height: 100vh;
+  background-color: var(--primary);
 }
