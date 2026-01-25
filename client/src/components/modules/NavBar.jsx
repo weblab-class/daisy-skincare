@@ -1,16 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Routes, Route, Outlet, Link, useLocation } from "react-router-dom";
+import { GoogleLogin } from "@react-oauth/google";
 
-/** Navigation Bar */
+import { get, post } from "../../utilities";
+import { UserContext } from "../context/UserContext";
 
-const NavBar = () => {
+// navigation bar
+
+const NavBar = (props) => {
+  {/** grace added userID */}
+  const userID = useContext(UserContext);
+
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
   const isHomePage = location.pathname === '/';
 
   return (
     <>
-        <div className="Nav-container">
+        <nav className="Navbar-container">
 
         {/* Hamburger Icon Button */}
         <button
@@ -36,13 +43,38 @@ const NavBar = () => {
           className={`fixed top-0 left-0 h-full w-64 bg-white/10 backdrop-blur-lg border-r border-white/20 transition-transform duration-300 ease-in-out z-40 ${isOpen ? "translate-x-0" : "-translate-x-full"}`}
         >
           <nav className="flex flex-col gap-6 mt-24 px-8 text-purple-600 font-bold text-xl">
-            <Link
-              to="user"
-              onClick={() => setIsOpen(false)}
-              className="hover:text-purple-400"
-            >
-              Profile
+
+
+            {/** grace created new route to home */}
+            <Link to="/" className="hover:text-purple-400">
+              Home
             </Link>
+            {/** grace modified to accept users */}
+            {userID && (
+              <Link
+                to={`/user/${userID}`}
+                onClick={() => setIsOpen(false)}
+                className="hover:text-purple-400"
+              >
+                Profile
+              </Link>
+            )}
+            {/** grace function additions for navbar from catbook */}
+            {/** feel free to move the google button around :) */}
+            {userID ? (
+              <button className="hover:text-purple-400" onClick={props.handleLogout}>
+                Sign out
+              </button>
+            ) : (
+              <GoogleLogin
+                text="signin_with"
+                onSuccess={props.handleLogin}
+                onFailure={(err) => console.log(err)}
+                containerProps={{ className: "hover:text-purple-400" }}
+              />
+            )}
+
+
             <Link
               to="product"
               onClick={() => setIsOpen(false)}
@@ -66,7 +98,7 @@ const NavBar = () => {
             onClick={() => setIsOpen(false)}
           />
         )}
-        </div>
+        </nav>
     </>
   );
 };

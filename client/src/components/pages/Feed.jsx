@@ -1,16 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 
 import { get, post } from "../../utilities.js";
+import { NewReview } from "../modules/NewInput.jsx";
+import { UserContext } from "../context/UserContext";
 
-import { NewReview } from "../modules/NewInput.jsx"; // Import NewReview
 import "./Feed.css";
 import Ratings from "../modules/Ratings";
 
 
 const Feed = () => {
   const [ratings, setRatings] = useState([]);
+  const userID = useContext(UserContext);
 
+  // ratings connected to backend
   useEffect(() => {
     get("/api/ratings").then((ratings) => {
       setRatings(ratings);
