@@ -1,28 +1,32 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 
 import { get, post } from "../../utilities.js";
-
-import { NewReview } from "../modules/NewInput.jsx"; // Import NewReview
-import "./Feed.css";
+import { NewReview } from "../modules/NewInput.jsx";
+import { UserContext } from "../context/UserContext";
 import Ratings from "../modules/Ratings";
 
 
 const Feed = () => {
   const [ratings, setRatings] = useState([]);
+  const userID = useContext(UserContext);
 
+  // ratings connected to backend (chronologically reversed)
+  // where most recent ratings are on top
   useEffect(() => {
-    get("/api/ratings").then((ratings) => {
-      setRatings(ratings);
+    get("/api/feed").then((ratingsObjs) => {
+      let reversedRatingsObjs = ratingsObjs.reverse();
+      setRatings(reversedRatingsObjs);
     });
   }, []);
 
+  // submit new skincare review
+  // modified from before to handle ratings list better
   const submitNewReview = (reviewObj) => {
-    post("/api/rating", reviewObj).then((rating) => {
-      setRatings([rating, ...ratings]);
-    });
+    setRatings([reviewObj].concat(ratings));
   };
 
+  // combine ratings into list
   let ratingsList = null;
   const hasRatings = ratings.length !== 0;
 
@@ -45,10 +49,9 @@ const Feed = () => {
 
   return (
     <>
-      <div className="Feed-container">
-        <NewReview onSubmit={submitNewReview} />
-        {ratingsList}
-      </div>
+      <div className="spacer"></div>
+      {userID && <NewReview submitNewReview={submitNewReview} />}
+      {ratingsList}
     </>
   );
 };

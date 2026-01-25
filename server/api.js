@@ -5,15 +5,29 @@ const router = express.Router();
 const Product  = require("./models/product");
 const Rating = require("./models/rating");
 const Comment = require("./models/comment");
+const User = require("./models/user");
+const auth = require("./auth");
 
-
-router.get("/test", (req, res) => {
-  res.send({ message: "Example API endpoint" });
+router.get("/user", (req, res) => {
+  User.findById(req.query.userid).then((user) => {
+    res.send(user);
+  });
 });
 
+router.post("/login", auth.login);
+router.post("/logout", auth.logout);
 
-// implement GET /api/ratings endpoint
-router.get("/ratings", (req, res) => {
+router.get("/whoami", (req, res) => {
+  if (req.user) {
+    res.send(req.user);
+  } else {
+    // user is not logged in
+    res.send({});
+  }
+});
+
+// implement GET /api/feed endpoint
+router.get("/feed", (req, res) => {
   Rating.find({}).then((ratings) => {
     res.send(ratings);
   });
@@ -34,14 +48,14 @@ router.post("/rating", (req, res) => {
 })
 
 // implement GET /api/comments endpoint
-router.get("/comments", (req, res) => {
+router.get("/comment", (req, res) => {
   Comment.find({ parent: req.query.parent }).then((comments) => {
     res.send(comments);
   });
 });
 
 // implement POST /api/comment endpoint
-router.post("/comment", (req, res) => {
+router.post("/comments", (req, res) => {
   const newComment = new Comment({
     creator_name: req.body.creator_name,
     parent: req.body.parent,

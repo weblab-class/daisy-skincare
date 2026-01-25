@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+
 import App from "./components/App";
 import Home from "./components/pages/Home";
 import NotFound from "./components/pages/NotFound";
@@ -14,17 +15,23 @@ import {
   RouterProvider,
   useNavigate,
 } from "react-router-dom";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
+//  identifies web application to Google's authentication service
+const GOOGLE_CLIENT_ID = "652128607404-rkv0o9ma7cqrlf75vlums1ga44ha59d9.apps.googleusercontent.com";
+
+// page routing configuration
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
       <Route path="/" element={<App />}>
         <Route index element={<Home />}/>
-        <Route path="user" element={<User />}/>
+        <Route path="user/:userID" element={<User />}/>
         <Route path="product" element={<Product />}/>
         <Route path="product/:productID" element={<ProductPage />}/>
       </Route>
 
+      {/** error page routing */}
       <Route path="*" element={<NotFound />} />
     </>,
   ),
@@ -32,5 +39,7 @@ const router = createBrowserRouter(
 
 // renders React Component "Root"
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <RouterProvider router={router} />,
+  <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+    <RouterProvider router={router} />
+  </GoogleOAuthProvider>
 );

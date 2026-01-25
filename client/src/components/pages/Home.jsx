@@ -5,7 +5,7 @@ import homepage from "../../assets/homepage.png";
 import "./Home.css";
 import Feed from "./Feed"
 
-/** Homepage */
+// homepage 
 
 const Home = () => {
   const location = useLocation();

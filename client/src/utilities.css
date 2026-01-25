@@ -30,10 +30,20 @@ body {
   background-color: var(--primary);
 }
 
-.u-bold {
+.User-bold {
   font-weight: 600;
 }
 
+.User-link {
+  color: var(--primary);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.User-link:hover {
+  color: var(--aqua);
+}
+
 .spacer {
-  height: 100%;
+  height: 30%;
 }
