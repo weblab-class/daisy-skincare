@@ -3,7 +3,7 @@ import "./NewInput.css";
 import { post } from "../../utilities";
 
 /** generic new input with wrappers on top */
-const NewInput = ({ defaultText, onSubmit, fields }) => {
+const NewInput = ({ defaultText, onSubmit, fields, className }) => {
 
   // dynamic initial states
   const initialState = {};
@@ -59,7 +59,7 @@ const NewInput = ({ defaultText, onSubmit, fields }) => {
   };
 
   return (
-    <div className="Input-container">
+    <div className={`Input-container ${className || ""}`}>
       {fields && fields.length > 0 ? (
         fields.map((field) =>
           field.type === "textarea" ? (
@@ -68,7 +68,7 @@ const NewInput = ({ defaultText, onSubmit, fields }) => {
               placeholder={field.placeholder}
               value={values[field.name]}
               onChange={(e) => handleChange(e, field.name)}
-              className="Input-input"
+              className={`Input-input ${className || ""}`}
               rows={field.rows || 4}
             />
           ) : (
@@ -78,7 +78,7 @@ const NewInput = ({ defaultText, onSubmit, fields }) => {
               placeholder={field.placeholder}
               value={values[field.name]}
               onChange={(e) => handleChange(e, field.name)}
-              className="Input-input"
+              className={`Input-input ${className || ""}`}
               min={field.min}
               max={field.max}
             />
@@ -90,7 +90,7 @@ const NewInput = ({ defaultText, onSubmit, fields }) => {
           placeholder={defaultText}
           value={values.value}
           onChange={handleChange}
-          className="Input-input"
+          className={`Input-input ${className || ""}`}
         />
       )}
       <button onClick={handleSubmit} className="Input-button">
@@ -106,7 +106,7 @@ const NewComment = ({ reviewId, addNewComment }) => {
     const body = { parent: reviewId, content: value };
     post("/api/comment", body).then((comment) => addNewComment && addNewComment(comment));
   };
-  return <NewInput onSubmit={handleSubmit} />;
+  return <NewInput onSubmit={handleSubmit} className="Comment-input" />;
 };
 
 /** new review */

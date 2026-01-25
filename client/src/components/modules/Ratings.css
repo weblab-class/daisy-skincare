@@ -6,7 +6,7 @@
 
 .Review-left,
 .Review-right {
-  flex: 0 0 200px;
+  flex: 0 0 225px;
   display: flex;
   justify-content: center;
   align-items: center;
