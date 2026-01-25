@@ -1,134 +1,138 @@
 import React, { useState } from "react";
 import "./NewInput.css";
+import { post } from "../../utilities";
 
-/** A generic component for adding custom text in a text box */
-const NewInput = (props) => {
-  const [value, setValue] = useState("");
+/** generic new input with wrappers on top */
+const NewInput = ({ defaultText, onSubmit, fields }) => {
 
-  const handleChange = (event) => {
-    setValue(event.target.value);
+  // dynamic initial states
+  const initialState = {};
+  if (fields && fields.length > 0) {
+    fields.forEach((f) => (initialState[f.name] = ""));
+  } else {
+    initialState.value = "";
+  }
+
+  const [values, setValues] = useState(initialState);
+
+  // handle when user starts to change
+  const handleChange = (e, name) => {
+    if (name) {
+      setValues({ ...values, [name]: e.target.value });
+    } else {
+      setValues({ value: e.target.value });
+    }
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    props.onSubmit && props.onSubmit(value);
-    setValue("");
+  // when submitted
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (fields && fields.length > 0) {
+      for (const field of fields) {
+        /** optional for now out of convenience
+        if (!field.optional && !values[field.name].trim()) {
+          alert(`${field.placeholder} cannot be empty.`);
+          return;
+        }
+        */
+        if (field.type === "number") {
+          const val = Number(values[field.name]);
+          if ((field.min && val < field.min) || (field.max && val > field.max)) {
+            alert(`${field.placeholder} must be between ${field.min} and ${field.max}`);
+            return;
+          }
+        }
+      }
+      onSubmit && onSubmit(values);
+      const reset = {};
+      fields.forEach((f) => (reset[f.name] = ""));
+      setValues(reset);
+    } else {
+      if (!values.value.trim()) {
+        alert("Input cannot be empty.");
+        return;
+      }
+      onSubmit && onSubmit(values.value);
+      setValues({ value: "" });
+    }
   };
 
   return (
-    <div className="u-flex">
-      <input
-        type="text"
-        placeholder={props.defaultText}
-        value={value}
-        onChange={handleChange}
-        className="NewInput-input"
-      />
-      <button
-        type="submit"
-        onClick={handleSubmit}
-        className="NewInput-button u-pointer"
-      >
+    <div className="Input-container">
+      {fields && fields.length > 0 ? (
+        fields.map((field) =>
+          field.type === "textarea" ? (
+            <textarea
+              key={field.name}
+              placeholder={field.placeholder}
+              value={values[field.name]}
+              onChange={(e) => handleChange(e, field.name)}
+              className="Input-input"
+              rows={field.rows || 4}
+            />
+          ) : (
+            <input
+              key={field.name}
+              type={field.type || "text"}
+              placeholder={field.placeholder}
+              value={values[field.name]}
+              onChange={(e) => handleChange(e, field.name)}
+              className="Input-input"
+              min={field.min}
+              max={field.max}
+            />
+          )
+        )
+      ) : (
+        <input
+          type="text"
+          placeholder={defaultText}
+          value={values.value}
+          onChange={handleChange}
+          className="Input-input"
+        />
+      )}
+      <button onClick={handleSubmit} className="Input-button">
         Submit
       </button>
     </div>
   );
 };
 
-
-/** When creating a new comment component */
-
-export const NewComment = (props) => {
-  const addComment = (content) => {
-    props.addNewComment(content);
+/** new comment with api endpoint */
+const NewComment = ({ reviewId, addNewComment }) => {
+  const handleSubmit = (value) => {
+    const body = { parent: reviewId, content: value };
+    post("/api/comment", body).then((comment) => addNewComment && addNewComment(comment));
   };
-
-  return <NewInput defaultText="New Comment" onSubmit={addComment} />;
+  return <NewInput onSubmit={handleSubmit} />;
 };
 
-/** When creating a new review component */
-export const NewReview = (props) => {
-  const [product, setProduct] = useState("");
-  const [brand, setBrand] = useState("");
-  const [rating, setRating] = useState("");
-  const [content, setContent] = useState("");
-  const [image, setImage] = useState("");
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
+/** new review */
+const NewReview = ({ addNewReview }) => {
+  const fields = [
+    { name: "product", placeholder: "Product" },
+    { name: "brand", placeholder: "Brand" },
+    { name: "rating_value", placeholder: "Rating (1-5)", type: "number", min: 1, max: 5 },
+    { name: "content", placeholder: "Review content", type: "textarea", rows: 8 },
+    { name: "image", placeholder: "Image URL (optional)", optional: true },
+  ];
+  const handleSubmit = (values) => {
     const body = {
-      product,
-      brand,
-      rating_value: rating,
-      content,
-      image,
+      product: values.product,
+      brand: values.brand,
+      rating_value: values.rating_value,
+      content: values.content,
+      image: values.image,
     };
 
-    // Basic validation
-    if (!product || !brand || !rating || !content) {
-      alert("Please fill out all fields except image (optional).");
-      return;
-    }
-    if (rating < 1 || rating > 5) {
-      alert("Rating must be between 1 and 5.");
-      return;
-    }
-
-    props.onSubmit && props.onSubmit(body);
-    setProduct("");
-    setBrand("");
-    setRating("");
-    setContent("");
-    setImage("");
+    // api post endpoint for new rating
+    post("/api/rating", body).then((review) => {
+      addNewReview && addNewReview(review);
+    });
   };
-
-  return (
-    <div className="NewInput-container u-flexColumn">
-      <h2 className="u-textCenter">Create a New Review</h2>
-      <input
-        type="text"
-        placeholder="Product"
-        value={product}
-        onChange={(e) => setProduct(e.target.value)}
-        className="NewInput-input"
-      />
-      <input
-        type="text"
-        placeholder="Brand"
-        value={brand}
-        onChange={(e) => setBrand(e.target.value)}
-        className="NewInput-input"
-      />
-      <input
-        type="number"
-        placeholder="Rating (1-5)"
-        value={rating}
-        onChange={(e) => setRating(e.target.value)}
-        className="NewInput-input"
-        min="1"
-        max="5"
-      />
-      <textarea
-        placeholder="Review content"
-        value={content}
-        onChange={(e) => setContent(e.target.value)}
-        className="NewInput-input"
-        rows="4"
-      />
-      <input
-        type="text"
-        placeholder="Image URL (optional)"
-        value={image}
-        onChange={(e) => setImage(e.target.value)}
-        className="NewInput-input"
-      />
-      <button
-        type="submit"
-        onClick={handleSubmit}
-        className="NewInput-button u-pointer"
-      >
-        Submit Review
-      </button>
-    </div>
-  );
+  return <NewInput fields={fields} onSubmit={handleSubmit} />;
 };
+
+export { NewComment, NewReview };

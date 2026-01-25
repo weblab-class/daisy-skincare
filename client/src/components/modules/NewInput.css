@@ -1,19 +1,24 @@
-.NewInput-input,
-.NewInput-button {
+.Input-input,
+.Input-button {
   font-family: "Open Sans";
   font-size: 14px;
   padding: var(--s) var(--m);
 }
 
-.NewInput-input {
+.Input-input {
   flex-grow: 1;
   border: var(--darkgrey) 1px solid;
   border-radius: var(--xs) 0 0 var(--xs);
   transition: box-shadow 0.1s;
-  margin-bottom: var(--s); /* Added margin for spacing between inputs */
+  margin-bottom: var(--s);
 }
 
-.NewPostInput-button {
+.Input-input:focus-within {
+  border-color: var(--primary--dim);
+  box-shadow: 0 0 0 var(--xs) rgba(0, 123, 255, 0.25);
+}
+
+.Input-button {
   color: var(--primary);
   border: var(--primary) 1px solid;
   border-radius: 0 var(--xs) var(--xs) 0;
@@ -21,23 +26,23 @@
   transition: color 0.1s, background 0.1s;
 }
 
-.NewPostInput-button:hover {
+.Input-button:hover {
   color: var(--white);
   background-color: var(--primary);
 }
 
-.NewInput-container {
+.Input-container {
   display: flex;
   flex-direction: column;
-  padding: var(--m);
-  margin: var(--m) 10%; /* Matches Review-container margin */
+  padding: var(--xs);
+  margin: var(--xs) 10%;
   background-color: var(--white);
   border: var(--darkgrey) 1px solid;
   border-radius: var(--xs);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.NewInput-container h2 {
+.h2 {
   margin-top: 0;
   margin-bottom: var(--m);
   color: var(--primary);

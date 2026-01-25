@@ -22,7 +22,7 @@ const Ratings = (props) => {
   const [leftDuck] = useState(getRandomDuck);
   const [rightDuck] = useState(getRandomDuck);
 
-  // render existing comments
+  // renders existing comments
   useEffect(() => {
     get("/api/comment", { parent: props._id }).then((comments) => {
       setComments(comments);

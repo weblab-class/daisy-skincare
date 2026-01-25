@@ -6,31 +6,25 @@
 
 .Review-left,
 .Review-right {
-  flex: 0 0 400px;
+  flex: 0 0 200px;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .Review-center {
-  flex: 1;
+  flex: 4;
   border: teal 1px solid;
   border-radius: var(--m);
 }
-
 
 .Review-body,
 .Review-commentSection {
   padding: var(--m) var(--l);
 }
 
-.Review-user {
-  font-size: 20px;
-  font-weight: 600;
-}
-
 .Review-content {
-  font-size: 18px;
+  font-size: 14px;
   margin: var(--s) 0 0;
 }
 
