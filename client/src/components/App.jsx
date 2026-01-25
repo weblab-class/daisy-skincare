@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
 
 import NavBar from "./modules/NavBar";
@@ -6,54 +6,41 @@ import "../utilities.css";
 import "./App.css";
 
 import { get, post } from "../utilities";
-import { useState, useEffect } from "react";
 import { UserContext } from "./context/UserContext";
 
-/** base application (not homepage)
- *  includes navbar + homepage >> feed
-*/
-
 const App = () => {
-  const [userId, setUserId] = useState(null);
+  const [userID, setUserID] = useState(null);
 
-  // check if registed user in the database and currently logged in
+  // check if registered user in the database and currently logged in
   useEffect(() => {
     get("/api/whoami").then((user) => {
       if (user._id) {
-        setUserId(user._id);
+        setUserID(user._id);
       }
     });
   }, []);
 
   // login function
-  // 'res' contains the response from Google's authentication servers
   const handleLogin = (res) => {
-    console.log(res);
-
-    // server verification of login
     const userToken = res.credential;
     post("/api/login", { token: userToken }).then((user) => {
-      setUserId(user._id);
-      console.log(user);
+      setUserID(user._id);
     });
   };
 
   // logout function
   const handleLogout = () => {
-    console.log("Logged out successfully!");
     post("/api/logout");
-    setUserId(null);
+    setUserID(null);
   };
 
   return (
-    <>
-      <UserContext.Provider value={userId}>
-        <NavBar handleLogin={handleLogin} handleLogout={handleLogout} />
-        <div className="App-container">
-          <Outlet />
-        </div>
-      </UserContext.Provider>
-    </>
+    <UserContext.Provider value={{ userID, setUserID }}>
+      <NavBar handleLogin={handleLogin} handleLogout={handleLogout} />
+      <div className="App-container">
+        <Outlet />
+      </div>
+    </UserContext.Provider>
   );
 };
 
