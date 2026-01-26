@@ -8,11 +8,13 @@ import flower from "../../assets/margins/margin-flower.png";
 import tie from "../../assets/margins/margin-tie.png";
 import small from "../../assets/margins/margin-small.png";
 import swim from "../../assets/margins/margin-swim.png";
+import bow from "../../assets/margins/margin-bow.png";
+import darktie from "../../assets/margins/margin-darktie.png";
 
 // ratings that populate the feed
 
 // ducks in the margins generating function
-const ducks = [flower, tie, small, swim];
+const ducks = [flower, tie, small, swim, bow, darktie];
 function getRandomDuck() {
   return ducks[Math.floor(Math.random() * ducks.length)];
 }

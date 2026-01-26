@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import "./NewInput.css";
 import { post } from "../../utilities";
+
+import "./NewInput.css";
 
 /** NewComment Component */
 const NewComment = ({ reviewId, addNewComment }) => {
