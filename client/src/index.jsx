@@ -5,7 +5,7 @@ import App from "./components/App";
 import Home from "./components/pages/Home";
 import NotFound from "./components/pages/NotFound";
 import User from "./components/pages/User";
-import Product from "./components/pages/Product"
+import ProductSearch from "./components/pages/ProductSearch";
 import ProductPage from "./components/pages/ProductPage";
 
 import {
@@ -25,8 +25,8 @@ const router = createBrowserRouter(
     <>
       <Route path="/" element={<App />}>
         <Route index element={<Home />}/>
-        <Route path="profile/:userID" element={<User />}/>
-        <Route path="product" element={<Product />}/>
+        <Route path="user/:userID" element={<User />}/>
+        <Route path="product" element={<ProductSearch />}/>
         <Route path="product/:productID" element={<ProductPage />}/>
       </Route>
 
