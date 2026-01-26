@@ -1,13 +1,55 @@
-/** Core backend router / API */
-
+// backend router and api
 const express = require("express");
 const router = express.Router();
+
+// mongo schema imports
 const Product  = require("./models/product");
 const Rating = require("./models/rating");
 const Comment = require("./models/comment");
 const User = require("./models/user");
 const auth = require("./auth");
 
+
+// GET /api/feed endpoint
+router.get("/feed", (req, res) => {
+  Rating.find({}).then((ratings) => {
+    res.send(ratings);
+  });
+});
+
+// POST /api/rating endpoint
+router.post("/rating", (req, res) => {
+  const newReview = new Rating({
+    user_name: req.user._id,
+    rating_value: `${req.rating_value}/5`,
+    product: req.product,
+    brand: req.brand,
+    image: req.image,
+    content: req.content,
+  });
+
+  newReview.save().then((rating) => res.send(rating));
+})
+
+// GET /api/commentsfeed endpoint
+router.get("/commentsfeed", (req, res) => {
+  Comment.find({ parent: req.query.parent }).then((comments) => {
+    res.send(comments);
+  });
+});
+
+// POST /api/comments endpoint
+router.post("/comment", (req, res) => {
+  const newComment = new Comment({
+    creator_name: req.creator_name,
+    parent: req.parent,
+    content: req.content,
+  });
+
+  newComment.save().then((comment) => res.send(comment));
+});
+
+// GET /api/user endpoint
 router.get("/user", (req, res) => {
   User.findById(req.query.userid).then((user) => {
     res.send(user);
@@ -17,6 +59,7 @@ router.get("/user", (req, res) => {
 router.post("/login", auth.login);
 router.post("/logout", auth.logout);
 
+// /api/whoami authentication
 router.get("/whoami", (req, res) => {
   if (req.user) {
     res.send(req.user);
@@ -26,47 +69,7 @@ router.get("/whoami", (req, res) => {
   }
 });
 
-// implement GET /api/feed endpoint
-router.get("/feed", (req, res) => {
-  Rating.find({}).then((ratings) => {
-    res.send(ratings);
-  });
-});
-
-// implement POST /api/ratings endpoint
-router.post("/rating", (req, res) => {
-  const newReview = new Rating({
-    user_name: "New User", // Hardcoded for now
-    rating_value: `${req.body.rating_value}/5`, // Format rating value
-    product: req.body.product,
-    brand: req.body.brand,
-    image: req.body.image,
-    content: req.body.content,
-  });
-
-  newReview.save().then((rating) => res.send(rating));
-})
-
-// implement GET /api/comments endpoint
-router.get("/comment", (req, res) => {
-  Comment.find({ parent: req.query.parent }).then((comments) => {
-    res.send(comments);
-  });
-});
-
-// implement POST /api/comment endpoint
-router.post("/comments", (req, res) => {
-  const newComment = new Comment({
-    creator_name: req.body.creator_name,
-    parent: req.body.parent,
-    content: req.body.content,
-  });
-
-  newComment.save().then((comment) => res.send(comment));
-});
-
-
-// implement POST /api/product endpoint
+// POST /api/product endpoint
 router.post("/product", async (req,res)=>{
   try{
     const newProduct = new Product(req.body);

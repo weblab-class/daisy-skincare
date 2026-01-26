@@ -24,7 +24,7 @@ const Ratings = (props) => {
 
   // renders existing comments
   useEffect(() => {
-    get("/api/comment", { parent: props._id }).then((comments) => {
+    get("/api/commentsfeed", { parent: props._id }).then((comments) => {
       setComments(comments);
     });
   }, []);
