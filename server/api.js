@@ -1,72 +1,86 @@
-/** Core backend router / API */
-
+// backend router and api
 const express = require("express");
 const router = express.Router();
+const socketManager = require("./server-socket");
+
+// mongo schema imports
 const Product  = require("./models/product");
 const Rating = require("./models/rating");
 const Comment = require("./models/comment");
 const User = require("./models/user");
 const auth = require("./auth");
 
-router.get("/user", (req, res) => {
-  User.findById(req.query.userid).then((user) => {
-    res.send(user);
-  });
-});
-
-router.post("/login", auth.login);
-router.post("/logout", auth.logout);
-
-router.get("/whoami", (req, res) => {
-  if (req.user) {
-    res.send(req.user);
-  } else {
-    // user is not logged in
-    res.send({});
-  }
-});
-
-// implement GET /api/feed endpoint
+// GET /api/feed endpoint
 router.get("/feed", (req, res) => {
   Rating.find({}).then((ratings) => {
     res.send(ratings);
   });
 });
 
-// implement POST /api/ratings endpoint
-router.post("/rating", (req, res) => {
+// POST /api/rating endpoint
+router.post("/rating", auth.ensureLoggedIn, (req, res) => {
+  console.log("req.body:", req.body);
   const newReview = new Rating({
-    user_name: "New User", // Hardcoded for now
-    rating_value: `${req.body.rating_value}/5`, // Format rating value
+    user_id: req.user._id,
+    user_name: req.user.name,
+    rating_value: req.body.rating_value,
     product: req.body.product,
     brand: req.body.brand,
     image: req.body.image,
     content: req.body.content,
   });
+  console.log("newReview:", newReview);
 
   newReview.save().then((rating) => res.send(rating));
 })
 
-// implement GET /api/comments endpoint
-router.get("/comment", (req, res) => {
+// GET /api/commentsfeed endpoint
+router.get("/commentsfeed", (req, res) => {
   Comment.find({ parent: req.query.parent }).then((comments) => {
     res.send(comments);
   });
 });
 
-// implement POST /api/comment endpoint
-router.post("/comments", (req, res) => {
+// POST /api/comments endpoint
+router.post("/comment", auth.ensureLoggedIn, (req, res) => {
+  console.log("req.body:", req.body);
   const newComment = new Comment({
-    creator_name: req.body.creator_name,
+    creator_id: req.user._id,
+    creator_name: req.user.name,
     parent: req.body.parent,
     content: req.body.content,
   });
+  console.log("newComment:", newComment);
 
   newComment.save().then((comment) => res.send(comment));
 });
 
+// login authentication
+router.post("/login", auth.login);
+router.post("/logout", auth.logout);
+router.get("/whoami", (req, res) => {
+  if (!req.user) {
+    // user is not logged in
+    return res.send({});
+  }
+  res.send(req.user);
+});
 
-// implement POST /api/product endpoint
+// GET /api/user endpoint
+router.get("/user", (req, res) => {
+  User.findById(req.query.userid).then((user) => {
+    res.send(user);
+  }).catch((err) => {
+    res.status(500).send('User Not');
+  });
+});
+
+router.post("/initsocket", (req, res) => {
+  // do nothing if user not logged in
+  res.send({});
+});
+
+// POST /api/product endpoint
 router.post("/product", async (req,res)=>{
   try{
     const newProduct = new Product(req.body);
@@ -178,5 +192,10 @@ router.get("/products", async (req,res)=> {
   }
 });
 
+// anything else falls to this "not found" case
+router.all("*", (req, res) => {
+  console.log(`API route not found: ${req.method} ${req.url}`);
+  res.status(404).send({ msg: "API route not found" });
+});
 
 module.exports = router;

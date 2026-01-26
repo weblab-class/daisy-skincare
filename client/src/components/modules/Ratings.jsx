@@ -24,7 +24,7 @@ const Ratings = (props) => {
 
   // renders existing comments
   useEffect(() => {
-    get("/api/comment", { parent: props._id }).then((comments) => {
+    get("/api/commentsfeed", { parent: props._id }).then((comments) => {
       setComments(comments);
     });
   }, []);
@@ -32,7 +32,7 @@ const Ratings = (props) => {
   // add new comment function
   // reworked for clearer api organization
   const addNewComment = (contentObj) => {
-    setComments(comments.concat([commentObj]));
+    setComments(comments.concat([contentObj]));
   };
 
   return (

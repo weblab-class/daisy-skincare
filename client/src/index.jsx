@@ -13,7 +13,6 @@ import {
   createRoutesFromElements,
   Route,
   RouterProvider,
-  useNavigate,
 } from "react-router-dom";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
