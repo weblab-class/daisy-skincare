@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useOutletContext } from "react-router-dom";
 
 import { get, post } from "../../utilities.js";
 import { NewReview } from "../modules/NewInput.jsx";

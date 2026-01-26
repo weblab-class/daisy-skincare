@@ -13,7 +13,6 @@ import {
   createRoutesFromElements,
   Route,
   RouterProvider,
-  useNavigate,
 } from "react-router-dom";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
@@ -26,7 +25,7 @@ const router = createBrowserRouter(
     <>
       <Route path="/" element={<App />}>
         <Route index element={<Home />}/>
-        <Route path="user/:userID" element={<User />}/>
+        <Route path="profile/:userID" element={<User />}/>
         <Route path="product" element={<Product />}/>
         <Route path="product/:productID" element={<ProductPage />}/>
       </Route>

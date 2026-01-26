@@ -8,7 +8,6 @@ import { UserContext } from "../context/UserContext";
 // navigation bar
 
 const NavBar = (props) => {
-  {/** grace added userID */}
   const userID = useContext(UserContext);
 
   const [isOpen, setIsOpen] = useState(false);

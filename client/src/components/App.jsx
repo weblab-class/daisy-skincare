@@ -6,6 +6,7 @@ import "../utilities.css";
 import "./App.css";
 
 import { get, post } from "../utilities";
+import { socket } from "../client-socket";
 import { UserContext } from "./context/UserContext";
 
 const App = () => {
@@ -13,11 +14,16 @@ const App = () => {
 
   // check if registered user in the database and currently logged in
   useEffect(() => {
-    get("/api/whoami").then((user) => {
-      if (user._id) {
-        setUserID(user._id);
-      }
-    });
+    get("/api/whoami")
+      .then((user) => {
+        console.log("whoami user:", user);
+        if (user._id) {
+          setUserID(user._id);
+        }
+      })
+      .catch((err) => {
+        console.log("whoami error:", err);
+      });
   }, []);
 
   // login function
@@ -25,6 +31,7 @@ const App = () => {
     const userToken = res.credential;
     post("/api/login", { token: userToken }).then((user) => {
       setUserID(user._id);
+      console.log(user);
     });
   };
 
@@ -35,7 +42,7 @@ const App = () => {
   };
 
   return (
-    <UserContext.Provider value={{ userID, setUserID }}>
+    <UserContext.Provider value={ userID }>
       <NavBar handleLogin={handleLogin} handleLogout={handleLogout} />
       <div className="App-container">
         <Outlet />

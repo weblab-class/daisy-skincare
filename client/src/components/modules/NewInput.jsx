@@ -104,7 +104,9 @@ const NewInput = ({ defaultText, onSubmit, fields, className }) => {
 const NewComment = ({ reviewId, addNewComment }) => {
   const handleSubmit = (value) => {
     const body = { parent: reviewId, content: value };
-    post("/api/comment", body).then((comment) => addNewComment && addNewComment(comment));
+    console.log("NewComment body:", body);
+    post("/api/comment", body)
+      .then((comment) => addNewComment && addNewComment(comment))
   };
   return <NewInput onSubmit={handleSubmit} className="Comment-input" />;
 };
@@ -126,11 +128,13 @@ const NewReview = ({ addNewReview }) => {
       content: values.content,
       image: values.image,
     };
+    console.log("NewReview body:", body);
 
     // api post endpoint for new rating
-    post("/api/rating", body).then((review) => {
-      addNewReview && addNewReview(review);
-    });
+    post("/api/rating", body)
+      .then((review) => {
+        addNewReview && addNewReview(review);
+      })
   };
   return <NewInput fields={fields} onSubmit={handleSubmit} />;
 };

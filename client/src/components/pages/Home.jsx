@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useOutletContext } from "react-router-dom";
 
 import homepage from "../../assets/homepage.png";
 import "./Home.css";
 import Feed from "./Feed"
 
-// homepage 
+// homepage
 
 const Home = () => {
   const location = useLocation();

@@ -32,7 +32,7 @@ const Ratings = (props) => {
   // add new comment function
   // reworked for clearer api organization
   const addNewComment = (contentObj) => {
-    setComments(comments.concat([commentObj]));
+    setComments(comments.concat([contentObj]));
   };
 
   return (

@@ -9,6 +9,7 @@ validator.checkSetup();
 //import libraries needed for the webserver to work!
 require("dotenv").config();
 const http = require("http");
+const bodyParser = require("body-parser"); // allow node to automatically parse POST body requests as JSON
 const express = require("express"); // backend framework for our node server.
 const session = require("express-session"); // library that stores info about each connected user
 const mongoose = require("mongoose"); // library to connect to MongoDB
@@ -44,8 +45,9 @@ mongoose
 const app = express();
 app.use(validator.checkRoutes);
 
-// allow us to make post requests
-app.use(express.json());
+// set up bodyParser, which allows us to process POST requests
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 // set up a session, which will persist login data across requests
 app.use(
@@ -103,6 +105,9 @@ app.use((err, req, res, next) => {
 
 // hardcode port to 3000 for now
 const port = 3000;
-app.listen(port, () => {
+const server = http.Server(app);
+socketManager.init(server);
+
+server.listen(port, () => {
   console.log(`Server running on port: ${port}`);
 });
