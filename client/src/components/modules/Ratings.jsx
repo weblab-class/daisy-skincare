@@ -39,6 +39,7 @@ const Ratings = (props) => {
     <div className="Review-container">
       <div className="Review-left">
         <img src={leftDuck} className="Review-duck" alt="decoration" />
+        <img src={rightDuck} className="Review-duck" alt="decoration" />
       </div>
 
       {/** ratings divided into duck margins
@@ -66,6 +67,7 @@ const Ratings = (props) => {
       {/** other duck margin on other side */}
       <div className="Review-right">
         <img src={rightDuck} className="Review-duck" alt="decoration" />
+        <img src={leftDuck} className="Review-duck" alt="decoration" />
       </div>
     </div>
   );
