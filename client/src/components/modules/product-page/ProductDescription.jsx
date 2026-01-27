@@ -1,7 +1,5 @@
-import ProductUserRating from "./ProductUserRating";
-import ProductFriendRating from "./ProductFriendRating";
-
-const ProductDescription = ({ product, onOpenProductUrl }) => (
+import ProductRatings from "./ProductRatings";
+const ProductDescription = ({ product, onOpenProductUrl, ratings }) => (
   <div className="product-info">
     <h1 className="product-name">{product.name}</h1>
     <div className="product-brand">{product.brand}</div>
@@ -23,9 +21,8 @@ const ProductDescription = ({ product, onOpenProductUrl }) => (
     {/* <div className="rating-section">
       <span className="rating-value">Rating: N/A (no reviews yet)</span>
     </div> */}
+    <ProductRatings ratings={ratings} />
 
-    <ProductUserRating rating={product.rating} />
-    <ProductFriendRating rating={product.rating} />
     {product.what_it_is && <div className="description">{product.what_it_is}</div>}
   </div>
 );

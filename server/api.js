@@ -182,6 +182,127 @@ const buildFilter = (query)=>{
   return filter
 };
 
+// GET /api/products/:id/ratings endpoint
+router.get("/products/:id/ratings", async (req, res) => {
+  try {
+    const productId = req.params.id;
+    const userName = req.user?.name;
+
+    const product = await Product.findById(productId);
+    if (!product) {
+      return res.status(404).send({ error: 'Product not found' });
+    }
+
+    const ratingQuery = { product: product.name };
+    if (product.brand) {
+      ratingQuery.brand = product.brand;
+    }
+
+    const allRatings = await Rating.find(ratingQuery);
+
+    const response = {
+      userRating: null,
+      friendsAverage: null,
+      friendsCount: 0,
+      overallAverage: null,
+      overallCount: allRatings.length
+    };
+
+    if (allRatings.length > 0) {
+      const sum = allRatings.reduce((total, r) => total + (r.rating_value || 0), 0);
+      response.overallAverage = sum / allRatings.length;
+    }
+
+    if (userName) {
+      // Find user's rating by name
+      const userRatingDoc = allRatings.find(r => r.user_name === userName);
+      response.userRating = userRatingDoc?.rating_value || null;
+
+      // Get user's friends
+      const user = await User.findById(req.user._id);
+
+      if (user && user.friends && user.friends.length > 0) {
+        // Get friend names
+        const friends = await User.find({ _id: { $in: user.friends } });
+        const friendNames = friends.map(f => f.name);
+
+        // Filter ratings from friends
+        const friendRatings = allRatings.filter(r =>
+          friendNames.includes(r.user_name) && r.user_name !== userName
+        );
+
+        response.friendsCount = friendRatings.length;
+
+        if (friendRatings.length > 0) {
+          const friendSum = friendRatings.reduce((total, r) => total + (r.rating_value || 0), 0);
+          response.friendsAverage = friendSum / friendRatings.length;
+        }
+      }
+    }
+
+    res.send(response);
+
+  } catch (err) {
+    console.error("Error fetching product ratings:", err);
+    res.status(500).send({ error: 'Failed to fetch ratings' });
+  }
+});
+
+// POST /api/products/:id/rate - Add/update a quick rating for a product
+router.post("/products/:id/rate", auth.ensureLoggedIn, async (req, res) => {
+  try {
+    const productId = req.params.id;
+    const { rating_value } = req.body;
+
+    // Validate rating
+    if (!rating_value || rating_value < 1 || rating_value > 5) {
+      return res.status(400).send({ error: 'Rating must be between 1 and 5' });
+    }
+
+    // Get the product
+    const product = await Product.findById(productId);
+    if (!product) {
+      return res.status(404).send({ error: 'Product not found' });
+    }
+
+    // Build query to find existing rating
+    const existingQuery = {
+      user_id: req.user._id,
+      product: product.name
+    };
+    if (product.brand) {
+      existingQuery.brand = product.brand;
+    }
+
+    // Check if user already has a rating for this product
+    const existingRating = await Rating.findOne(existingQuery);
+
+    if (existingRating) {
+      // Update existing rating
+      existingRating.rating_value = rating_value;
+      await existingRating.save();
+      res.send(existingRating);
+    } else {
+      // Create new rating
+      const newRating = new Rating({
+        user_id: req.user._id,
+        user_name: req.user.name,
+        rating_value: rating_value,
+        product: product.name,
+        brand: product.brand || '',
+        image: product.image_url || '',
+        content: '' // Empty content for quick ratings
+      });
+      const savedRating = await newRating.save();
+      res.send(savedRating);
+    }
+
+  } catch (err) {
+    console.error("Error saving product rating:", err);
+    res.status(500).send({ error: 'Failed to save rating' });
+  }
+});
+
 // implement GET /api/products/:id endpoint
 router.get("/products/:id",async (req,res)=> {
   try{
