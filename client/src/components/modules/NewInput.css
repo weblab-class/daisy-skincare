@@ -35,6 +35,21 @@
   resize: vertical;
 }
 
+.Input-input-wrap.ProductAutocomplete,
+.Input-input-wrap.BrandAutocomplete {
+  margin-bottom: var(--s);
+}
+
+.Input-container {
+  display: flex;
+  flex-direction: column;
+  padding: var(--xs);
+  margin: var(--xs) 10%;
+  background-color: var(--white);
+  border: var(--darkgrey) 1px solid;
+  border-radius: var(--xs);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  
 .New-input::placeholder {
   color: #aaa;
   font-style: italic;

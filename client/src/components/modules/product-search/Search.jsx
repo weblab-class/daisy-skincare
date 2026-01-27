@@ -1,13 +1,15 @@
+import ProductAutocomplete from "../ProductAutocomplete";
+
 const Search = ({ searchQuery, inputQuery, onInputChange, onSubmit }) => (
   <>
     <h1 className="product-page-title">Browse Products</h1>
     <form onSubmit={onSubmit} className="search-form">
-      <input
-        type="text"
-        placeholder="Search for products..."
+      <ProductAutocomplete
         value={inputQuery}
-        onChange={(e) => onInputChange(e.target.value)}
-        className="search-input"
+        onChange={onInputChange}
+        placeholder="Search for products..."
+        onSubmit={onSubmit}
+        inputClassName="search-input"
       />
       <button type="submit" className="search-button">
         Search
