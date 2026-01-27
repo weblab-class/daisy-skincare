@@ -21,7 +21,6 @@ const UserRatings = (props) => {
   );
 };
 
-
 // recent ratings show on user profile
 const Recent = () => {
   let userID = useParams().userID;
@@ -30,8 +29,9 @@ const Recent = () => {
   // get user's recent
   useEffect(() => {
     if (!userID) return;
-    get("/api/userratings", { userid: userID }).then((data) => {
+    get("/api/userratings", { user_id: userID }).then((data) => {
       setRatings(data);
+      console.log("data", data);
     });
   }, [userID]);
 
