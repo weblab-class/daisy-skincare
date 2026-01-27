@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import { post } from "../../utilities";
-import ProductAutocomplete from "./ProductAutocomplete";
-import BrandAutocomplete from "./BrandAutocomplete";
 
 import "./NewInput.css";
 
@@ -31,63 +29,15 @@ const NewComment = ({ reviewId, addNewComment }) => {
   };
 
   return (
-    <div className={`Input-container ${className || ""}`}>
-      {fields && fields.length > 0 ? (
-        fields.map((field) =>
-          field.type === "textarea" ? (
-            <textarea
-              key={field.name}
-              placeholder={field.placeholder}
-              value={values[field.name]}
-              onChange={(e) => handleChange(e, field.name)}
-              className={`Input-input ${className || ""}`}
-              rows={field.rows || 4}
-            />
-          ) : field.type === "product" ? (
-            <ProductAutocomplete
-              key={field.name}
-              value={values[field.name] ?? ""}
-              onChange={(v) => handleChange({ target: { value: v } }, field.name)}
-              placeholder={field.placeholder}
-              className={`Input-input-wrap ${className || ""}`}
-              inputClassName={`Input-input ${className || ""}`}
-              aria-label={field.placeholder}
-            />
-          ) : field.type === "brand" ? (
-            <BrandAutocomplete
-              key={field.name}
-              value={values[field.name] ?? ""}
-              onChange={(v) => handleChange({ target: { value: v } }, field.name)}
-              placeholder={field.placeholder}
-              className={`Input-input-wrap ${className || ""}`}
-              inputClassName={`Input-input ${className || ""}`}
-              aria-label={field.placeholder}
-            />
-          ) : (
-            <input
-              key={field.name}
-              type={field.type || "text"}
-              placeholder={field.placeholder}
-              value={values[field.name]}
-              onChange={(e) => handleChange(e, field.name)}
-              className={`Input-input ${className || ""}`}
-              min={field.min}
-              max={field.max}
-            />
-          )
-        )
-      ) : (
-        <input
-          type="text"
-          placeholder={defaultText}
-          value={values.value}
-          onChange={handleChange}
-          className={`Input-input ${className || ""}`}
-        />
-      )}
-      <button onClick={handleSubmit} className="Input-button">
-        Submit
-      </button>
+    <div className="New-commentContainer">
+      <textarea
+        placeholder="Write your comment..."
+        value={content}
+        onChange={handleChange}
+        className="New-input"
+        rows={4}
+      />
+      <button onClick={handleSubmit} className="New-button">Submit</button>
     </div>
   );
 };
@@ -107,29 +57,27 @@ const NewReview = ({ addNewReview }) => {
     setValues((prevValues) => ({ ...prevValues, [name]: value }));
   };
 
-/** new review */
-const NewReview = ({ addNewReview, submitNewReview }) => {
-  const onSuccess = addNewReview || submitNewReview;
-  const fields = [
-    { name: "product", placeholder: "Product", type: "product" },
-    { name: "brand", placeholder: "Brand", type: "brand" },
-    { name: "rating_value", placeholder: "Rating (1-5)", type: "number", min: 1, max: 5 },
-    { name: "content", placeholder: "Review content", type: "textarea", rows: 8 },
-    { name: "image", placeholder: "Image URL (optional)", optional: true },
-  ];
-  const handleSubmit = (values) => {
-    const body = {
-      product: values.product,
-      brand: values.brand,
-      rating_value: values.rating_value,
-      content: values.content,
-      image: values.image,
-    };
+  // submission and validation
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const { product, brand, rating_value, content, image } = values;
+
+    if (!product.trim() || !brand.trim() || !rating_value.trim() || !content.trim()) {
+      alert("All fields except Image are required.");
+      return;
+    }
+
+    if (Number(rating_value) < 1 || Number(rating_value) > 5) {
+      alert("Rating must be between 1 and 5.");
+      return;
+    }
+
+    const body = { product, brand, rating_value, content, image };
     console.log("NewReview body:", body);
 
     post("/api/rating", body)
       .then((review) => {
-        onSuccess && onSuccess(review);
+        addNewReview && addNewReview(review);
       })
       .catch((err) => console.error("Error posting review:", err));
 
