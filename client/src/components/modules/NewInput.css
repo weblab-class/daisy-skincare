@@ -31,6 +31,11 @@
   background-color: var(--primary);
 }
 
+.Input-input-wrap.ProductAutocomplete,
+.Input-input-wrap.BrandAutocomplete {
+  margin-bottom: var(--s);
+}
+
 .Input-container {
   display: flex;
   flex-direction: column;

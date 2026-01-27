@@ -17,22 +17,52 @@ router.get("/feed", (req, res) => {
   });
 });
 
-// POST /api/rating endpoint
-router.post("/rating", auth.ensureLoggedIn, (req, res) => {
-  console.log("req.body:", req.body);
-  const newReview = new Rating({
-    user_id: req.user._id,
-    user_name: req.user.name,
-    rating_value: req.body.rating_value,
-    product: req.body.product,
-    brand: req.body.brand,
-    image: req.body.image,
-    content: req.body.content,
-  });
-  console.log("newReview:", newReview);
+// POST /api/rating – if product/brand is new, create in Product collection; always create rating
+router.post("/rating", auth.ensureLoggedIn, async (req, res) => {
+  try {
+    console.log("req.body:", req.body);
+    const productName = (req.body.product || "").trim();
+    const brandName = (req.body.brand || "").trim();
 
-  newReview.save().then((rating) => res.send(rating));
-})
+    if (productName || brandName) {
+      try {
+        const nameToUse = productName || brandName;
+        const query = { name: nameToUse };
+        if (brandName) {
+          query.brand = brandName;
+        } else {
+          query.$or = [{ brand: null }, { brand: "" }, { brand: { $exists: false } }];
+        }
+        const existing = await Product.findOne(query);
+        if (!existing) {
+          await Product.create({
+            name: nameToUse,
+            brand: brandName || undefined,
+            category: "Uncategorized",
+          });
+        }
+      } catch (err) {
+        console.error("Product create error (rating will still be saved):", err);
+      }
+    }
+
+    const newReview = new Rating({
+      user_id: req.user._id,
+      user_name: req.user.name,
+      rating_value: req.body.rating_value,
+      product: req.body.product,
+      brand: req.body.brand,
+      image: req.body.image,
+      content: req.body.content,
+    });
+    console.log("newReview:", newReview);
+    const rating = await newReview.save();
+    res.send(rating);
+  } catch (err) {
+    console.error("POST /rating error:", err);
+    res.status(500).send({ error: "Failed to save rating" });
+  }
+});
 
 // GET /api/commentsfeed endpoint
 router.get("/commentsfeed", (req, res) => {
@@ -166,29 +196,54 @@ router.get("/products/:id",async (req,res)=> {
   }
 })
 
+// GET /api/brands – distinct brands from products, optional search, limit
+router.get("/brands", async (req, res) => {
+  try {
+    const { search, limit } = req.query;
+    const cap = Math.min(Math.max(Number(limit) || 15, 1), 50);
+    const match = {};
+    if (search && String(search).trim()) {
+      match.brand = { $regex: String(search).trim(), $options: "i" };
+    } else {
+      match.brand = { $exists: true, $nin: [null, ""] };
+    }
+    const rows = await Product.aggregate([
+      { $match: match },
+      { $group: { _id: "$brand" } },
+      { $sort: { _id: 1 } },
+      { $limit: cap },
+    ]);
+    res.send(rows.map((r) => r._id).filter(Boolean));
+  } catch (err) {
+    console.error("error getting brands:", err);
+    res.status(500);
+    res.send([]);
+  }
+});
+
 // implement GET /api/products endpoint
-router.get("/products", async (req,res)=> {
-  try{
-    const {search} = req.query;
-
+router.get("/products", async (req, res) => {
+  try {
+    const { search, limit } = req.query;
     let query = {};
-
-    if (search){
+    if (search) {
       query = {
         $or: [
-          {name: {$regex: search, $options: 'i'}},
-          {what_it_is: {$regex: search, $options: 'i'}}
-        ]
-      }
+          { name: { $regex: search, $options: "i" } },
+          { what_it_is: { $regex: search, $options: "i" } },
+        ],
+      };
     }
-
-    const products = await Product.find(query);
-    res.send(products)
-
+    let q = Product.find(query);
+    if (limit && Number(limit) > 0) {
+      q = q.limit(Number(limit)).select("name _id");
+    }
+    const products = await q;
+    res.send(products);
   } catch (err) {
-    console.log("error getting product: ", err)
-    res.status(500)
-    res.send({})
+    console.log("error getting product:", err);
+    res.status(500);
+    res.send([]);
   }
 });
 

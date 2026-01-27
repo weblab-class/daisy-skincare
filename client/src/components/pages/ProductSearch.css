@@ -236,6 +236,23 @@ body {
     color: #333;
 }
 
+.search-form {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.search-form .ProductAutocomplete {
+    flex: 1;
+    min-width: 200px;
+}
+
+.search-input {
+    width: 100%;
+}
+
 .loading-message,
 .error-message,
 .no-products {

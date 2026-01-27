@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import "./NewInput.css";
 import { post } from "../../utilities";
+import ProductAutocomplete from "./ProductAutocomplete";
+import BrandAutocomplete from "./BrandAutocomplete";
 
 /** generic new input with wrappers on top */
 const NewInput = ({ defaultText, onSubmit, fields, className }) => {
@@ -71,6 +73,26 @@ const NewInput = ({ defaultText, onSubmit, fields, className }) => {
               className={`Input-input ${className || ""}`}
               rows={field.rows || 4}
             />
+          ) : field.type === "product" ? (
+            <ProductAutocomplete
+              key={field.name}
+              value={values[field.name] ?? ""}
+              onChange={(v) => handleChange({ target: { value: v } }, field.name)}
+              placeholder={field.placeholder}
+              className={`Input-input-wrap ${className || ""}`}
+              inputClassName={`Input-input ${className || ""}`}
+              aria-label={field.placeholder}
+            />
+          ) : field.type === "brand" ? (
+            <BrandAutocomplete
+              key={field.name}
+              value={values[field.name] ?? ""}
+              onChange={(v) => handleChange({ target: { value: v } }, field.name)}
+              placeholder={field.placeholder}
+              className={`Input-input-wrap ${className || ""}`}
+              inputClassName={`Input-input ${className || ""}`}
+              aria-label={field.placeholder}
+            />
           ) : (
             <input
               key={field.name}
@@ -112,10 +134,11 @@ const NewComment = ({ reviewId, addNewComment }) => {
 };
 
 /** new review */
-const NewReview = ({ addNewReview }) => {
+const NewReview = ({ addNewReview, submitNewReview }) => {
+  const onSuccess = addNewReview || submitNewReview;
   const fields = [
-    { name: "product", placeholder: "Product" },
-    { name: "brand", placeholder: "Brand" },
+    { name: "product", placeholder: "Product", type: "product" },
+    { name: "brand", placeholder: "Brand", type: "brand" },
     { name: "rating_value", placeholder: "Rating (1-5)", type: "number", min: 1, max: 5 },
     { name: "content", placeholder: "Review content", type: "textarea", rows: 8 },
     { name: "image", placeholder: "Image URL (optional)", optional: true },
@@ -133,7 +156,7 @@ const NewReview = ({ addNewReview }) => {
     // api post endpoint for new rating
     post("/api/rating", body)
       .then((review) => {
-        addNewReview && addNewReview(review);
+        onSuccess && onSuccess(review);
       })
   };
   return <NewInput fields={fields} onSubmit={handleSubmit} />;

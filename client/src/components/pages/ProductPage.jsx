@@ -1,11 +1,10 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
-import ProductImage from "../modules/ProductImage";
-import ProductDescription from "../modules/ProductDescription";
-import ProductInfo from "../modules/ProductInfo";
-import ProductIngredients from "../modules/ProductIngredients";
-
+import ProductImage from "../modules/product-page/ProductImage";
+import ProductDescription from "../modules/product-page/ProductDescription";
+import ProductInfo from "../modules/product-page/ProductInfo";
+import ProductIngredients from "../modules/product-page/ProductIngredients";
 import "./ProductPage.css";
 
 const ProductPage = () => {
@@ -64,6 +63,7 @@ const ProductPage = () => {
       </div>
     );
   }
+  
 
   return (
     <div className="product-page-container">
@@ -83,6 +83,7 @@ const ProductPage = () => {
         showFullIngredients={showFullIngredients}
         onToggleIngredients={toggleIngredients}
       />
+
     </div>
   );
 };

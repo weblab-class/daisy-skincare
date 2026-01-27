@@ -1,3 +1,6 @@
+import ProductUserRating from "./ProductUserRating";
+import ProductFriendRating from "./ProductFriendRating";
+
 const ProductDescription = ({ product, onOpenProductUrl }) => (
   <div className="product-info">
     <h1 className="product-name">{product.name}</h1>
@@ -17,9 +20,12 @@ const ProductDescription = ({ product, onOpenProductUrl }) => (
       </button>
     </div>
 
-    <div className="rating-section">
+    {/* <div className="rating-section">
       <span className="rating-value">Rating: N/A (no reviews yet)</span>
-    </div>
+    </div> */}
+
+    <ProductUserRating rating={product.rating} />
+    <ProductFriendRating rating={product.rating} />
     {product.what_it_is && <div className="description">{product.what_it_is}</div>}
   </div>
 );
