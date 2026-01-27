@@ -178,7 +178,7 @@
 }
 
 .product-page-container .see-more {
-    color: #007AFF;
+    color: var(--aqua);
     cursor: pointer;
     font-size: 14px;
     font-weight: 500;
@@ -189,7 +189,7 @@
 }
 
 .product-page-container .see-more:hover {
-    color: #0051D5;
+    color: var(--primary);
 }
 
 .product-page-container .full-ingredients {

@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Link, useOutletContext } from "react-router-dom";
-
 import { get, post } from "../../utilities.js";
 import { NewReview } from "../modules/NewInput.jsx";
 import { UserContext } from "../context/UserContext";
+
+import "./Feed.css"
 import Ratings from "../modules/Ratings";
+import newreview from "../../assets/newreview.png"; // Import the image
 
 
 const Feed = () => {
@@ -49,9 +50,14 @@ const Feed = () => {
 
   return (
     <>
-      <div className="spacer"></div>
-      {userID && <NewReview submitNewReview={submitNewReview} />}
+      <div className="Feed-container">
+      <div className="Feed-review"
+      style={{ backgroundImage: `url(${newreview})` }}>
+        <div className="spacer"></div>
+        {userID && (<NewReview addNewReview={submitNewReview} />)}
+      </div>
       {ratingsList}
+      </div>
     </>
   );
 };

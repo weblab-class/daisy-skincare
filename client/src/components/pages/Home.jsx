@@ -1,21 +1,20 @@
 import React, { useState } from "react";
-import { useLocation, useOutletContext } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 import homepage from "../../assets/homepage.png";
 import "./Home.css";
-import Feed from "./Feed"
+import Feed from "./Feed";
 
 // homepage
 
 const Home = () => {
   const location = useLocation();
-  const isHomePage = location.pathname === '/';
+  const isHomePage = location.pathname === "/";
 
   return (
     <>
-        <div className="Home-container"
-        style={{ backgroundImage: `url(${homepage})` }}>
-
+      <div className="Home-container"
+      style={{ backgroundImage: `url(${homepage})` }}>
         {/* homepage title */}
         {/* could class names be renamed to be more concise? thanks! */}
         {isHomePage && (
@@ -30,7 +29,7 @@ const Home = () => {
 
         {/** feed after homepage at bottom */}
         <Feed />
-        </div>
+      </div>
     </>
   );
 };

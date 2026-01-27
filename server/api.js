@@ -80,6 +80,18 @@ router.post("/initsocket", (req, res) => {
   res.send({});
 });
 
+// GET /api/userratings endpoint
+router.get("/userratings", auth.ensureLoggedIn, (req, res) => {
+  Rating.find({ user_id: req.user._id })
+    .sort({ _id: -1 }) // newest first
+    .then((ratings) => {
+      res.send(ratings);
+    })
+});
+
+
+/////////////////////////////
+
 // POST /api/product endpoint
 router.post("/product", async (req,res)=>{
   try{

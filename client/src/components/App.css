@@ -1,21 +1,3 @@
 .App-container {
   background-color: var(--primary);
 }
-
-.search-button {
-  padding: 10px 16px;
-  background: rgb(149, 173, 255);
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-.browse-link:hover {
-  background: rgb(149, 173, 255);
-}
-
-.User-link:hover {
-  background: rgb(149, 173, 255);
-}
