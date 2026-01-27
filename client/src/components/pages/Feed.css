@@ -1,10 +1,14 @@
-.Home-container {
-  width: 100vw;
-  height: 100vh;
-  min-height: 100vh;
+.Feed-container {
+  width: 100%;
   background-color: var(--primary);
+}
+
+.Feed-review {
+  height: 100vh;
+  margin: 0;
 
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+  min-height: 100vh;
 }

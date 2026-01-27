@@ -4,7 +4,7 @@ const router = express.Router();
 const socketManager = require("./server-socket");
 
 // mongo schema imports
-const Product  = require("./models/product");
+const Product = require("./models/product");
 const Rating = require("./models/rating");
 const Comment = require("./models/comment");
 const User = require("./models/user");
@@ -98,11 +98,13 @@ router.get("/whoami", (req, res) => {
 
 // GET /api/user endpoint
 router.get("/user", (req, res) => {
-  User.findById(req.query.userid).then((user) => {
-    res.send(user);
-  }).catch((err) => {
-    res.status(500).send('User Not');
-  });
+  User.findById(req.query.userid)
+    .then((user) => {
+      res.send(user);
+    })
+    .catch((err) => {
+      res.status(500).send("User Not");
+    });
 });
 
 router.post("/initsocket", (req, res) => {
@@ -110,76 +112,85 @@ router.post("/initsocket", (req, res) => {
   res.send({});
 });
 
-// POST /api/product endpoint
-router.post("/product", async (req,res)=>{
-  try{
-    const newProduct = new Product(req.body);
-    newProduct.save().then((product)=> res.send(product));
+// GET /api/userratings endpoint
+router.get("/userratings", auth.ensureLoggedIn, (req, res) => {
+  console.log("user ids on backend", req.query.user_id);
+  Rating.find({ user_id: req.query.user_id })
+    .sort({ _id: -1 }) // newest first
+    .then((ratings) => {
+      console.log(ratings);
+      res.send(ratings);
+    });
+});
 
+/////////////////////////////
+
+// POST /api/product endpoint
+router.post("/product", async (req, res) => {
+  try {
+    const newProduct = new Product(req.body);
+    newProduct.save().then((product) => res.send(product));
   } catch (err) {
-    console.error("error creating product: ", err)
+    console.error("error creating product: ", err);
   }
 });
 
 // search filter
-const buildFilter = (query)=>{
-  const filter = {}
-  const fields = [
-      'category',
-      'subcategory',
-      'brand'];
+const buildFilter = (query) => {
+  const filter = {};
+  const fields = ["category", "subcategory", "brand"];
 
-  fields.forEach((field) =>{
-    if (query[field]){
-      filter[field] = query[field]
+  fields.forEach((field) => {
+    if (query[field]) {
+      filter[field] = query[field];
     }
-  })
+  });
 
   // text search
-  if (query.search){
-    filter.$text = {$search: query.search}
+  if (query.search) {
+    filter.$text = { $search: query.search };
   }
 
   // price range
-  if (query.minprice || query.maxprice){
+  if (query.minprice || query.maxprice) {
     filter.price = {};
-    if (query.minprice){
-      filter.price.$gte = Number(query.minprice)
+    if (query.minprice) {
+      filter.price.$gte = Number(query.minprice);
     }
-    if (query.maxprice){
-      filter.price.$lte = Number(query.maxprice)
+    if (query.maxprice) {
+      filter.price.$lte = Number(query.maxprice);
     }
   }
 
   // skin type
-  if (query.skin_type){
+  if (query.skin_type) {
     filter.skin_type = {
-      $in: query.skin_type.split(',')
+      $in: query.skin_type.split(","),
     };
   }
 
   // skin concern
-  if (query.skincare_concerns){
+  if (query.skincare_concerns) {
     filter.skincare_concerns = {
-      $in: query.skincare_concerns.split(',')
+      $in: query.skincare_concerns.split(","),
     };
   }
 
   // ingredient
-  if (query.ingredients){
+  if (query.ingredients) {
     filter.ingredients = {
-      $in: query.ingredients.split(',')
+      $in: query.ingredients.split(","),
     };
   }
 
   //highlighted_ingredients
-  if (query.highlighted_ingredients){
+  if (query.highlighted_ingredients) {
     filter.highlighted_ingredientsingredients = {
-      $in: query.highlighted_ingredients.split(',')
+      $in: query.highlighted_ingredients.split(","),
     };
   }
 
-  return filter
+  return filter;
 };
 
 // GET /api/products/:id/ratings endpoint
@@ -304,18 +315,18 @@ router.post("/products/:id/rate", auth.ensureLoggedIn, async (req, res) => {
 });
 
 // implement GET /api/products/:id endpoint
-router.get("/products/:id",async (req,res)=> {
-  try{
+router.get("/products/:id", async (req, res) => {
+  try {
     const product = await Product.findById(req.params.id);
-    if (!product){
-      return res.status(404).send({error: 'product not found'})
+    if (!product) {
+      return res.status(404).send({ error: "product not found" });
     }
-    res.send(product)
-  } catch (err){
-    console.log("error getting product: ", err)
-    res.status(500).send({error: 'couldnt get product'})
+    res.send(product);
+  } catch (err) {
+    console.log("error getting product: ", err);
+    res.status(500).send({ error: "couldnt get product" });
   }
-})
+});
 
 // GET /api/brands – distinct brands from products, optional search, limit
 router.get("/brands", async (req, res) => {

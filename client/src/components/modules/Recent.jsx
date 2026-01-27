@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from "react";
-import SingleReview from "./SingleReview";
 import { get } from "../../utilities.js";
+import { useParams } from "react-router-dom";
+
+import SingleReview from "./SingleReview";
 import "./Ratings.css";
 
-const RecentRatings = (props) => {
-
+// user ratings without comments component
+const UserRatings = (props) => {
   return (
     <div className="Review-container">
       <SingleReview
         _id={props._id}
-        creator_name={props.creator_name}
         content={props.content}
         image={props.image}
         product={props.product}
@@ -20,26 +21,30 @@ const RecentRatings = (props) => {
   );
 };
 
+// recent ratings show on user profile
 const Recent = () => {
+  let userID = useParams().userID;
   const [ratings, setRatings] = useState([]);
 
+  // get user's recent
   useEffect(() => {
-    get("/api/ratings").then((data) => {
+    if (!userID) return;
+    get("/api/userratings", { user_id: userID }).then((data) => {
       setRatings(data);
+      console.log("data", data);
     });
-  }, []);
+  }, [userID]);
 
   if (ratings.length === 0) {
-    return <div className="Feed-container">No ratings currently!</div>;
+    return <div className="Feed-container">No ratings yet!</div>;
   }
 
   return (
     <div className="Feed-container">
       {ratings.map((review) => (
-        <RecentRatings
+        <UserRatings
           key={`Review_${review._id}`}
           _id={review._id}
-          creator_name={review.user_name}
           content={review.content}
           image={review.image}
           product={review.product}
@@ -51,4 +56,4 @@ const Recent = () => {
   );
 };
 
-export { RecentRatings, Recent };
+export { UserRatings, Recent };
