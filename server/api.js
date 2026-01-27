@@ -194,10 +194,12 @@ const buildFilter = (query) => {
 };
 
 // GET /api/products/:id/ratings endpoint
+// GET /api/products/:id/ratings endpoint
+// GET /api/products/:id/ratings endpoint
 router.get("/products/:id/ratings", async (req, res) => {
   try {
     const productId = req.params.id;
-    const userName = req.user?.name;
+    const userID = req.user?._id;
 
     const product = await Product.findById(productId);
     if (!product) {
@@ -224,22 +226,24 @@ router.get("/products/:id/ratings", async (req, res) => {
       response.overallAverage = sum / allRatings.length;
     }
 
-    if (userName) {
-      // Find user's rating by name
-      const userRatingDoc = allRatings.find(r => r.user_name === userName);
+    if (userID) {
+      // Convert userID to string for comparison
+      const userIdString = userID.toString();
+
+      // Find user's rating by comparing ObjectId strings
+      const userRatingDoc = allRatings.find(r => r.user_id === userIdString);
       response.userRating = userRatingDoc?.rating_value || null;
 
       // Get user's friends
-      const user = await User.findById(req.user._id);
+      const user = await User.findById(userID);
 
       if (user && user.friends && user.friends.length > 0) {
-        // Get friend names
-        const friends = await User.find({ _id: { $in: user.friends } });
-        const friendNames = friends.map(f => f.name);
+        // Convert friend ObjectIds to strings
+        const friendIdStrings = user.friends.map(id => id.toString());
 
-        // Filter ratings from friends
+        // Filter ratings from friends (excluding current user)
         const friendRatings = allRatings.filter(r =>
-          friendNames.includes(r.user_name) && r.user_name !== userName
+          friendIdStrings.includes(r.user_id) && r.user_id !== userIdString
         );
 
         response.friendsCount = friendRatings.length;
