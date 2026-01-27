@@ -32,6 +32,7 @@
 .Review-commentSection {
   background-color: var(--aqua);
   border-top: 1px solid var(--darkgrey);
+  border-radius: var(--m);
 }
 
 .Review-commentBody {

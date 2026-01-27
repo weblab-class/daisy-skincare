@@ -4,11 +4,10 @@
 }
 
 .Feed-review {
-  width: 100%;
   height: 100vh;
   margin: 0;
 
-  background-size: contain;
+  background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   min-height: 100vh;

@@ -42,6 +42,7 @@
 
 .New-button {
   padding: 0px 0px;
+  margin: 5px 0px;
   background-color: var(--primary);
   color: white;
   border: none;
