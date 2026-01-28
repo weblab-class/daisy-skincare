@@ -63,6 +63,9 @@ router.post("/rating", auth.ensureLoggedIn, async (req, res) => {
       existingRating.product = req.body.product;
       existingRating.brand = req.body.brand;
       existingRating.image = req.body.image;
+      existingRating.user_name = req.user.name;
+      existingRating.user_id = req.user._id;
+
       if (productId) {
         existingRating.product_id = productId;
       }
@@ -75,7 +78,7 @@ router.post("/rating", auth.ensureLoggedIn, async (req, res) => {
       const newReview = new Rating({
         user_id: req.user._id,
         user_name: req.user.name,
-        product_id: productId, // Make sure to save product_id
+        product_id: productId,
         rating_value: req.body.rating_value,
         product: req.body.product,
         brand: req.body.brand,
