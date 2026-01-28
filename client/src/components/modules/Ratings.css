@@ -43,3 +43,14 @@
   max-width: 150px;
   height: auto;
 }
+
+.Review-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.Review-link:hover {
+  text-decoration: underline;
+  cursor: pointer;
+  color: var(--teal);
+}

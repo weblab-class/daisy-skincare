@@ -24,6 +24,7 @@ router.post("/rating", auth.ensureLoggedIn, async (req, res) => {
     const productName = (req.body.product || "").trim();
     const brandName = (req.body.brand || "").trim();
     const productId = req.body.product_id;
+    let image = req.body.image; // ADD THIS LINE
 
     if (productName || brandName) {
       try {
@@ -35,11 +36,15 @@ router.post("/rating", auth.ensureLoggedIn, async (req, res) => {
           query.$or = [{ brand: null }, { brand: "" }, { brand: { $exists: false } }];
         }
         const existing = await Product.findOne(query);
+        if (existing) {
+          image = existing.image_url;
+        }
         if (!existing) {
           await Product.create({
             name: nameToUse,
             brand: brandName || undefined,
             category: "Uncategorized",
+            image_url: req.body.image,
           });
         }
       } catch (err) {
@@ -52,7 +57,6 @@ router.post("/rating", auth.ensureLoggedIn, async (req, res) => {
     query.product = productName;
     query.brand = brandName;
 
-
     console.log("Searching for existing rating with query:", query);
     const existingRating = await Rating.findOne(query);
 
@@ -62,7 +66,7 @@ router.post("/rating", auth.ensureLoggedIn, async (req, res) => {
       existingRating.content = req.body.content;
       existingRating.product = req.body.product;
       existingRating.brand = req.body.brand;
-      existingRating.image = req.body.image;
+      existingRating.image = image;
       existingRating.user_name = req.user.name;
       existingRating.user_id = req.user._id;
 
@@ -82,7 +86,7 @@ router.post("/rating", auth.ensureLoggedIn, async (req, res) => {
         rating_value: req.body.rating_value,
         product: req.body.product,
         brand: req.body.brand,
-        image: req.body.image,
+        image: image,
         content: req.body.content,
       });
       console.log("Creating new review:", newReview);
@@ -244,6 +248,8 @@ router.get("/products/:id/ratings", async (req, res) => {
 
     const response = {
       userRating: null,
+      userReview: null,
+      otherReviews: [],
       friendsAverage: null,
       friendsCount: 0,
       overallAverage: null,
@@ -261,7 +267,12 @@ router.get("/products/:id/ratings", async (req, res) => {
 
       // Find user's rating by comparing ObjectId strings
       const userRatingDoc = allRatings.find(r => r.user_id === userIdString);
-      response.userRating = userRatingDoc?.rating_value || null;
+      if (userRatingDoc) {
+        response.userRating = userRatingDoc?.rating_value || null;
+        if (userRatingDoc.content) {
+          response.userReview = {id: userRatingDoc._id, content: userRatingDoc.content, rating_value: userRatingDoc.rating_value, user_name: userRatingDoc.user_name};
+        }
+      }
 
       // Get user's friends
       const user = await User.findById(userID);
@@ -282,6 +293,16 @@ router.get("/products/:id/ratings", async (req, res) => {
           response.friendsAverage = friendSum / friendRatings.length;
         }
       }
+
+      response.otherReviews = allRatings.filter(r => r.user_id !== userID);
+      response.otherReviews = response.otherReviews.map(r => ({
+        id: r._id,
+        content: r.content,
+        created_at: r.created_at,
+        rating_value: r.rating_value,
+        user_name: r.user_name,
+        user_id: r.user_id,
+      }));
     }
 
     res.send(response);
@@ -296,7 +317,7 @@ router.get("/products/:id/ratings", async (req, res) => {
 router.post("/products/:id/rate", auth.ensureLoggedIn, async (req, res) => {
   try {
     const productId = req.params.id;
-    const { rating_value } = req.body;
+    const { rating_value,content } = req.body;
 
     // Validate rating
     if (!rating_value || rating_value < 1 || rating_value > 5) {
@@ -324,6 +345,7 @@ router.post("/products/:id/rate", auth.ensureLoggedIn, async (req, res) => {
     if (existingRating) {
       // Update existing rating
       existingRating.rating_value = rating_value;
+      existingRating.content = content;
       await existingRating.save();
       res.send(existingRating);
     } else {
@@ -335,7 +357,7 @@ router.post("/products/:id/rate", auth.ensureLoggedIn, async (req, res) => {
         product: product.name,
         brand: product.brand || '',
         image: product.image_url || '',
-        content: '' // Empty content for quick ratings
+        content: content,
       });
       const savedRating = await newRating.save();
       res.send(savedRating);
