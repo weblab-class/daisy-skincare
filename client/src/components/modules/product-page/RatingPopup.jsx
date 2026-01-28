@@ -3,7 +3,7 @@ import { post } from "../../../utilities";
 import "./RatingPopup.css";
 
 const RatingPopup = ({
-  productId,
+  product , brand, product_id,
   existingRating,
   existingComment,
   onClose,
@@ -21,8 +21,18 @@ const RatingPopup = ({
       return;
     }
 
+    console.log("Submitting:", { // Debug log
+        product,
+        product_id,
+        brand,
+        rating_value: rating,
+        content: comment,
+      });
+
     post("/api/rating", {
-      productId,
+      product: product,
+      product_id: product_id,
+      brand: brand,
       rating_value: rating,
       content: comment,
     }).then((res) => {

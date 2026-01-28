@@ -27,7 +27,7 @@ const router = createBrowserRouter(
         <Route index element={<Home />}/>
         <Route path="user/:userID" element={<User />}/>
         <Route path="product" element={<ProductSearch />}/>
-        <Route path="product/:productID" element={<ProductPage />}/>
+        <Route path="product/:productID" element={<ProductPage user={User} />}/>
       </Route>
 
       {/** error page routing */}
