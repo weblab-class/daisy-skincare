@@ -38,17 +38,8 @@ const ProductsGrid = ({ products }) => {
           Load More Products
         </button>
       )}
-      {startIndex + productsPerPage < products.length && (
-        <button onClick={loadNextProducts} className="more-button">
-          Load More Products
-        </button>
-      )}
-      {startIndex + productsPerPage < products.length && (
-        <button onClick={loadNextProducts} className="more-button">
-          Load More Products
-        </button>
-      )}
     </div>
+
   );
 };
 

@@ -369,7 +369,24 @@
   background: var(--aqua);
 }
 
+.more-button:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  background: var(--green);
+  color: white;
+}
+.search-button:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    background: var(--green);
+    color: white;
+  }
+
 .more-button {
+  grid-column: 1 / -1;
+  width: 100%;
+  justify-content: center;
+  padding: 10px 16px;
   background: var(--darkgreen);
   color: white;
   border: none;
@@ -377,5 +394,4 @@
   font-size: 16px;
   cursor: pointer;
   display: block;
-  width: 100%;
 }
