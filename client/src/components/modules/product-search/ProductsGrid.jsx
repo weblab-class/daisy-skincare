@@ -3,31 +3,25 @@ import ProductImage from "./ProductImage";
 import ProductInfo from "./ProductInfo";
 import ProductLink from "./ProductLink";
 
-const randomProducts = (array) => {
-  const shuffledProducts = [...array];
-  for (let i = shuffledProducts.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffledProducts[i], shuffledProducts[j]] = [shuffledProducts[j], shuffledProducts[i]];
-  }
-  return shuffledProducts;
-};
-
 const ProductsGrid = ({ products }) => {
-
-  // show 24 products at a time
+  // Pagination state
   const [startIndex, setStartIndex] = useState(0);
   const productsPerPage = 24;
-  const randomProductsList = randomProducts(products).slice(startIndex,
-                                          startIndex + productsPerPage);
 
-  // get next set of products
+  // Slice products for current page
+  const displayedProducts = products.slice(
+    startIndex,
+    startIndex + productsPerPage
+  );
+
+  // Load next set of products
   const loadNextProducts = () => {
     setStartIndex((prevIndex) => prevIndex + productsPerPage);
   };
 
   return (
     <div className="products-grid">
-      {randomProductsList.map((product) => (
+      {displayedProducts.map((product) => (
         <div key={product._id} className="product-card">
           <ProductImage imageUrl={product.image_url} name={product.name} />
           <ProductInfo
@@ -39,9 +33,12 @@ const ProductsGrid = ({ products }) => {
           </ProductInfo>
         </div>
       ))}
-      <button onClick={loadNextProducts} className="search-button">
-        Load More Products
-      </button>
+
+      {startIndex + productsPerPage < products.length && (
+        <button onClick={loadNextProducts} className="search-button">
+          Load More Products
+        </button>
+      )}
     </div>
   );
 };

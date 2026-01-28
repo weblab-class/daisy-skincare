@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { post } from "../../utilities";
+import ProductAutocomplete from "./ProductAutocomplete";
+import BrandAutocomplete from "./BrandAutocomplete";
 
 import "./NewInput.css";
 
@@ -7,8 +9,15 @@ import "./NewInput.css";
 const NewComment = ({ reviewId, addNewComment }) => {
   const [content, setContent] = useState("");
 
-  const handleChange = (e) => {
-    setContent(e.target.value);
+  const handleChange = (eOrValue, fieldName) => {
+    if (eOrValue && eOrValue.target) {
+      // Regular input event
+      const { name, value } = eOrValue.target;
+      setValues(prev => ({ ...prev, [name]: value }));
+    } else {
+      // Direct value from Autocomplete
+      setValues(prev => ({ ...prev, [fieldName]: eOrValue }));
+    }
   };
 
   // submission and validation
@@ -52,9 +61,17 @@ const NewReview = ({ addNewReview }) => {
     image: "",
   });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setValues((prevValues) => ({ ...prevValues, [name]: value }));
+  const handleChange = (eOrValue, fieldName) => {
+    if (eOrValue && eOrValue.target) {
+      // Normal <input> or <textarea>
+      const { name, value } = eOrValue.target;
+      setValues(prev => ({ ...prev, [name]: value }));
+    } else if (fieldName) {
+      // Autocomplete value
+      setValues(prev => ({ ...prev, [fieldName]: eOrValue }));
+    } else {
+      console.error("handleChange called incorrectly", eOrValue, fieldName);
+    }
   };
 
   // submission and validation
@@ -92,21 +109,19 @@ const NewReview = ({ addNewReview }) => {
 
   return (
     <div className="New-reviewContainer">
-      <input
-        type="text"
-        name="product"
-        placeholder="Product"
+      <ProductAutocomplete
         value={values.product}
-        onChange={handleChange}
-        className="New-input"
+        onChange={(v) => handleChange(v, "product")}
+        className="New-input-wrap"
+        inputClassName="New-input"
+        aria-label="Product"
       />
-      <input
-        type="text"
-        name="brand"
-        placeholder="Brand"
+      <BrandAutocomplete
         value={values.brand}
-        onChange={handleChange}
-        className="New-input"
+        onChange={(v) => handleChange(v, "brand")}
+        className="New-input-wrap"
+        inputClassName="New-input"
+        aria-label="Brand"
       />
       <input
         type="number"

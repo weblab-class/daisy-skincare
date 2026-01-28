@@ -13,7 +13,7 @@ const SingleReview = (props) => {
       </div>
 
       {/** review written text, ratings values and link to user */}
-      <Link to={`/profile/${props.creator_id}`} className="User-link User-bold">
+      <Link to={`/user/${props.creator_id}`} className="User-link User-bold">
         {props.creator_name}
       </Link>
       <p className="Review-content">Product: {props.product}</p>

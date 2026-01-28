@@ -19,21 +19,17 @@ import {
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
 //  identifies web application to Google's authentication service
-const GOOGLE_CLIENT_ID =
-  "652128607404-rkv0o9ma7cqrlf75vlums1ga44ha59d9.apps.googleusercontent.com";
+const GOOGLE_CLIENT_ID = "744021408951-jq8ctjtln62lpjfdfi154vqifpr875fv.apps.googleusercontent.com";
 
 // page routing configuration
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
       <Route path="/" element={<App />}>
-        <Route index element={<Home />} />
-        <Route path="user/:userID" element={<User />} />
-        <Route path="product" element={<ProductSearch />} />
-        <Route path="product/:productID" element={<ProductPage />} />
-        <Route path="feed" element={<Feed />}>
-          <Route path="newReview" element={<Review />} />
-        </Route>
+        <Route index element={<Home />}/>
+        <Route path="user/:userID" element={<User />}/>
+        <Route path="product" element={<ProductSearch />}/>
+        <Route path="product/:productID" element={<ProductPage user={User} />}/>
       </Route>
 
       {/** error page routing */}

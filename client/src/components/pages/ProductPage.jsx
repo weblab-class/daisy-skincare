@@ -1,22 +1,24 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
-import ProductImage from "../modules/ProductImage";
-import ProductDescription from "../modules/ProductDescription";
-import ProductInfo from "../modules/ProductInfo";
-import ProductIngredients from "../modules/ProductIngredients";
-
+import ProductImage from "../modules/product-page/ProductImage";
+import ProductDescription from "../modules/product-page/ProductDescription";
+import ProductInfo from "../modules/product-page/ProductInfo";
+import ProductIngredients from "../modules/product-page/ProductIngredients";
+import ProductRatings from "../modules/product-page/ProductRatings";
 import "./ProductPage.css";
 
-const ProductPage = () => {
+const ProductPage = ({user}) => {
   const { productID } = useParams();
   const [product, setProduct] = useState(null);
+  const [ratings, setRatings] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showFullIngredients, setShowFullIngredients] = useState(false);
 
   useEffect(() => {
     loadProduct();
+    loadRatings();
   }, [productID]);
 
   const loadProduct = async () => {
@@ -32,6 +34,22 @@ const ProductPage = () => {
       console.error("Couldn't load product:", err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadRatings = async () => {
+    try {
+      console.log('Loading ratings for product:', productID);
+      const response = await fetch(`/api/products/${productID}/ratings`, {
+        credentials: 'include'
+      });
+      console.log('Ratings response status:', response.status);
+      if (!response.ok) throw new Error("Failed to get ratings");
+      const data = await response.json();
+      console.log('Ratings data received:', data);
+      setRatings(data);
+    } catch (err) {
+      console.error("Couldn't load ratings:", err);
     }
   };
 
@@ -64,12 +82,20 @@ const ProductPage = () => {
       </div>
     );
   }
+  const handleRatingSuccess = () => {
+    loadRatings();
+  };
+
 
   return (
     <div className="product-page-container">
       <div className="header">
         <ProductImage imageUrl={product.image_url} name={product.name} />
-        <ProductDescription product={product} onOpenProductUrl={openProductUrl} />
+        <ProductDescription
+          product={product}
+          onOpenProductUrl={openProductUrl}
+          ratings = {ratings} user={user}
+          onRatingSuccess={handleRatingSuccess}/>
       </div>
 
       <ProductInfo
@@ -83,6 +109,7 @@ const ProductPage = () => {
         showFullIngredients={showFullIngredients}
         onToggleIngredients={toggleIngredients}
       />
+
     </div>
   );
 };
