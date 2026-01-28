@@ -8,28 +8,34 @@
   font-family: inherit;
   font-size: inherit;
   padding: 10px 14px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--darkgreen);
   border-radius: 8px;
   outline: none;
   transition: border-color 0.2s, box-shadow 0.2s;
+  color: black;
+}
+
+.ProductAutocomplete-input::placeholder {
+  color: black;
+  opacity: 1;
 }
 
 /* Hover with mouse */
 .ProductAutocomplete-item:hover {
-  background-color:   rgba(6, 186, 186, 0.08);
+  background-color: var(--darkgreen);
 
 }
 
 /* Keyboard navigation (arrow keys) */
 .ProductAutocomplete-item[aria-selected="true"],
 .ProductAutocomplete-item.active {
-  background-color:  rgba(6, 186, 186, 0.08);
+  background-color: var(--darkgreen);
 
 }
 
 .ProductAutocomplete-input:focus {
-  border-color: var(--aqua);
-  box-shadow: 0 0 0 2px rgba(0, 214, 214, 0.23); /* aqua glow */
+  border-color: var(--darkgreen);
+  box-shadow: 0 0 0 2px var(--darkgreen);
 }
 
 .ProductAutocomplete-list {
@@ -41,9 +47,9 @@
   padding: 0;
   list-style: none;
   background: #fff;
-  border: 1px solid #e0e0e0;
+  border: 1px solid var(--darkgreen);
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 4px 12px black;
   max-height: 240px;
   overflow-y: auto;
   z-index: 1000;
@@ -54,32 +60,32 @@
 }
 
 .ProductAutocomplete-list::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: white;
   border-radius: 4px;
 }
 
 .ProductAutocomplete-list::-webkit-scrollbar-thumb {
-  background: #888;
+  background: var(--darkgreen);
   border-radius: 4px;
 }
 
 .ProductAutocomplete-list::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  background: var(--darkgreen);
 }
 .ProductAutocomplete-item {
   padding: 10px 14px;
   cursor: pointer;
   font-size: 14px;
-  color: #333;
+  color: black;
   transition: background-color 0.15s;
 }
 
 .ProductAutocomplete-item--highlight {
-  background-color: rgba(149, 173, 255, 0.15);
+  background-color: white;
 }
 
 .ProductAutocomplete-item--loading {
-  color: #666;
+  color: var(--darkgreen);
   cursor: default;
   font-style: italic;
 }

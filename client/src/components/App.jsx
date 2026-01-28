@@ -49,7 +49,8 @@ const App = () => {
         {userID && (
           <Link
             to="/newReview"
-            className="fixed bottom-10 right-10 w-23 h-23 bg-[#a3d0c9] text-white rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform z-[100] text-3xl"
+            className="fixed bottom-10 right-10 w-23 h-23 bg-[#a3d0c9] text-white rounded-full
+            flex items-center justify-center shadow-lg hover:scale-110 transition-transform z-[100] text-3xl"
           >
             +
           </Link>
