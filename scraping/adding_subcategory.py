@@ -1,10 +1,8 @@
 import pandas as pd
 from fuzzywuzzy import fuzz
 
-# Read the CSV
 df = pd.read_csv('./data/product_info_categorized.csv')
 
-# Define main category keywords
 category_keywords = {
     'Cleanser': [
         'cleanser', 'cleansing', 'face wash', 'facial wash', 'gel cleanser',
@@ -53,7 +51,6 @@ category_keywords = {
     ]
 }
 
-# Define subcategory keywords (can belong to multiple main categories)
 subcategory_keywords = {
     'Sunscreen': ['sunscreen', 'spf', 'sun protection', 'uv protection', 'broad spectrum'],
     'Anti-Aging': ['anti-aging', 'anti aging', 'wrinkle', 'fine lines', 'peptide', 'retinol', 'firming', 'lifting'],
@@ -68,17 +65,14 @@ subcategory_keywords = {
 }
 
 def categorize_product(product_name, fuzzy_threshold=70):
-    """Categorize a product based on its name using fuzzy matching."""
     if pd.isna(product_name) or product_name == '':
         return 'Unknown'
 
     product_name_lower = product_name.lower()
 
-    # Track best match
     best_score = 0
     best_category = 'Other'
 
-    # Check each category
     for category, keywords in category_keywords.items():
         for keyword in keywords:
             score = fuzz.token_set_ratio(keyword, product_name_lower)
@@ -91,54 +85,39 @@ def categorize_product(product_name, fuzzy_threshold=70):
                 best_score = score
                 best_category = category
 
-    # Only assign if above threshold
     if best_score >= fuzzy_threshold:
         return best_category
     else:
         return 'Other'
 
 def get_subcategories(product_name, fuzzy_threshold=65):
-    """Get all matching subcategories for a product (can have multiple)."""
     if pd.isna(product_name) or product_name == '':
         return ''
 
     product_name_lower = product_name.lower()
     matching_subcategories = []
 
-    # Check each subcategory
+
     for subcategory, keywords in subcategory_keywords.items():
         for keyword in keywords:
             score = fuzz.token_set_ratio(keyword, product_name_lower)
 
-            # Boost for exact substring match
             if keyword in product_name_lower:
                 score = max(score, 95)
 
-            # If match is good enough, add this subcategory
             if score >= fuzzy_threshold:
                 matching_subcategories.append(subcategory)
                 break  # Don't add same subcategory twice
 
-    # Return comma-separated list or empty string
     return ', '.join(matching_subcategories) if matching_subcategories else ''
 
-# Apply categorization
 print("Categorizing products...")
 df['category'] = df['name'].apply(categorize_product)
 df['subcategory'] = df['name'].apply(get_subcategories)
 
-# Save the updated CSV
 df.to_csv('./data/product_info_categorized.csv', index=False)
 
-# Print statistics
-print("\n" + "="*80)
-print("CATEGORY DISTRIBUTION")
-print("="*80)
-print(df['category'].value_counts())
 
-print("\n" + "="*80)
-print("SUBCATEGORY DISTRIBUTION")
-print("="*80)
 subcats = df['subcategory'].str.split(', ').explode()
 subcats = subcats[subcats != '']
 if len(subcats) > 0:
@@ -146,21 +125,14 @@ if len(subcats) > 0:
 else:
     print("No subcategories assigned")
 
-print("\n" + "="*80)
-print("SAMPLE CATEGORIZATIONS")
-print("="*80)
-print(f"{'Category':<20} | {'Subcategory':<30} | {'Product Name':<50}")
-print("-"*110)
+
 for idx, row in df.head(15).iterrows():
     cat = row['category']
     subcat = row['subcategory'] if row['subcategory'] else '-'
     name = row['name'][:50] if pd.notna(row['name']) else 'Unknown'
     print(f"{cat:<20} | {subcat:<30} | {name}")
 
-# Show products categorized as 'Other'
-print("\n" + "="*80)
-print("PRODUCTS CATEGORIZED AS 'OTHER' (Need Manual Review)")
-print("="*80)
+
 other_products = df[df['category'] == 'Other']
 if len(other_products) > 0:
     for idx, row in other_products.iterrows():
@@ -168,10 +140,7 @@ if len(other_products) > 0:
 else:
     print("  None - all products categorized!")
 
-# Show products with no subcategory
-print("\n" + "="*80)
-print("PRODUCTS WITH NO SUBCATEGORY")
-print("="*80)
+
 no_subcat = df[df['subcategory'] == '']
 if len(no_subcat) > 0:
     for idx, row in no_subcat.head(10).iterrows():
