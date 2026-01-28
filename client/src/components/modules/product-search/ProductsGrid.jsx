@@ -4,16 +4,17 @@ import ProductInfo from "./ProductInfo";
 import ProductLink from "./ProductLink";
 
 const ProductsGrid = ({ products }) => {
+  // Pagination state
   const [startIndex, setStartIndex] = useState(0);
   const productsPerPage = 24;
 
-  // slice products for current page
+  // Slice products for current page
   const displayedProducts = products.slice(
     startIndex,
     startIndex + productsPerPage
   );
 
-  // load next set of products
+  // Load next set of products
   const loadNextProducts = () => {
     setStartIndex((prevIndex) => prevIndex + productsPerPage);
   };
@@ -34,17 +35,7 @@ const ProductsGrid = ({ products }) => {
       ))}
 
       {startIndex + productsPerPage < products.length && (
-        <button onClick={loadNextProducts} className="more-button">
-          Load More Products
-        </button>
-      )}
-      {startIndex + productsPerPage < products.length && (
-        <button onClick={loadNextProducts} className="more-button">
-          Load More Products
-        </button>
-      )}
-      {startIndex + productsPerPage < products.length && (
-        <button onClick={loadNextProducts} className="more-button">
+        <button onClick={loadNextProducts} className="search-button">
           Load More Products
         </button>
       )}

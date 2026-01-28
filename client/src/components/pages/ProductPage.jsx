@@ -7,7 +7,6 @@ import ProductInfo from "../modules/product-page/ProductInfo";
 import ProductIngredients from "../modules/product-page/ProductIngredients";
 import ProductReview from "../modules/product-page/ProductReview";
 import "./ProductPage.css";
-import homepage from "../../assets/homepage.png";
 
 const ProductPage = ({user}) => {
   const { productID } = useParams();
@@ -86,40 +85,37 @@ const ProductPage = ({user}) => {
   };
 
   return (
-    <div className="product-page-container"
-    style={{ backgroundImage: `url(${homepage})` }}>
-      <div className="product-page-main">
-        <div className="header">
-          <ProductImage imageUrl={product.image_url} name={product.name} />
-          <ProductDescription
-            product={product}
-            onOpenProductUrl={openProductUrl}
-            ratings={ratingsData} // Changed: pass entire ratingsData object
-            user={user}
-            onRatingSuccess={handleRatingSuccess}
-          />
-        </div>
-
-        <ProductInfo
-          skincareConcerns={product.skincare_concerns ?? []}
-          skinType={product.skin_type ?? []}
-        />
-
-        <ProductIngredients
-          highlightedIngredients={product.highlighted_ingredients}
-          ingredients={product.ingredients ?? []}
-          showFullIngredients={showFullIngredients}
-          onToggleIngredients={toggleIngredients}
-        />
-
-        <ProductReview
-          productID={productID}
+    <div className="product-page-container">
+      <div className="header">
+        <ProductImage imageUrl={product.image_url} name={product.name} />
+        <ProductDescription
+          product={product}
+          onOpenProductUrl={openProductUrl}
+          ratings={ratingsData} // Changed: pass entire ratingsData object
           user={user}
-          userReview={ratingsData?.userReview}
-          otherReviews={ratingsData?.otherReviews ?? []}
-          onReviewSuccess={handleRatingSuccess} // Changed: use same handler
+          onRatingSuccess={handleRatingSuccess}
         />
       </div>
+
+      <ProductInfo
+        skincareConcerns={product.skincare_concerns ?? []}
+        skinType={product.skin_type ?? []}
+      />
+
+      <ProductIngredients
+        highlightedIngredients={product.highlighted_ingredients}
+        ingredients={product.ingredients ?? []}
+        showFullIngredients={showFullIngredients}
+        onToggleIngredients={toggleIngredients}
+      />
+
+      <ProductReview
+        productID={productID}
+        user={user}
+        userReview={ratingsData?.userReview}
+        otherReviews={ratingsData?.otherReviews ?? []}
+        onReviewSuccess={handleRatingSuccess} // Changed: use same handler
+      />
     </div>
   );
 };

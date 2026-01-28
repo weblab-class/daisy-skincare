@@ -34,16 +34,13 @@ const User = () => {
   }
 
   return (
-    <div className="max-w-4xl mx-auto min-h-screen">
+    <div className="max-w-4xl mx-auto min-h-screen pt-12 px-6">
       {/* Profile Header*/}
-      <div className="bg-white/60 backdrop-blur-xl rounded-[2rem] p-8 shadow-sm border
-      border-white/40 flex flex-col items-center">
+      <div className="bg-white/60 backdrop-blur-xl rounded-[2rem] p-8 shadow-sm border border-white/40 flex flex-col items-center">
         {/* Avatar */}
         <div className="relative group">
-          <div className="absolute -inset-0.5 bg-gradient-to-r from-[#a3d0c9] to-[#00d4ff]
-          rounded-full blur opacity-30 group-hover:opacity-60 transition duration-1000"></div>
-          <div className="relative w-100% h-100% bg-gray-200 rounded-full border-4 border-white
-          overflow-hidden shadow-inner">
+          <div className="absolute -inset-0.5 bg-gradient-to-r from-[#a3d0c9] to-[#00d4ff] rounded-full blur opacity-30 group-hover:opacity-60 transition duration-1000"></div>
+          <div className="relative w-32 h-32 bg-gray-200 rounded-full border-4 border-white overflow-hidden shadow-inner">
             {/* User initial */}
             <div className="w-full h-full bg-[#f8fafc] flex items-center justify-center text-4xl text-gray-400">
               {user.name.charAt(0)}
@@ -56,8 +53,7 @@ const User = () => {
           {user.name}
         </h1>
 
-        <div className="mt-2 inline-flex items-center px-3 py-1 rounded-full
-        bg-[#a3d0c9]/20 text-[#5ba197] text-xs font-semibold uppercase tracking-widest">
+        <div className="mt-2 inline-flex items-center px-3 py-1 rounded-full bg-[#a3d0c9]/20 text-[#5ba197] text-xs font-semibold uppercase tracking-widest">
           Skincare Enthusiast
         </div>
       </div>
