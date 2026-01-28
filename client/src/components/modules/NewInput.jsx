@@ -74,7 +74,6 @@ const NewReview = ({ addNewReview }) => {
     }
   };
 
-
   // submission and validation
   const handleSubmit = (e) => {
     e.preventDefault();
