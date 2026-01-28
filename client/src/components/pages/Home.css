@@ -2,7 +2,7 @@
   width: 100vw;
   height: 100vh;
   min-height: 100vh;
-  background-color: var(--primary);
+  /* background-color: var(--primary); */
 
   background-size: cover;
   background-position: center;
