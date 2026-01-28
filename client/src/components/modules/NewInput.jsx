@@ -90,7 +90,7 @@ const NewReview = ({ addNewReview }) => {
       return;
     }
 
-    const body = { product, product_id, brand, brand_id, rating_value, content, image };
+    const body = { product, brand, rating_value, content, image };
     console.log("NewReview body:", body);
 
     post("/api/rating", body)
