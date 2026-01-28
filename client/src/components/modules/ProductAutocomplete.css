@@ -16,14 +16,14 @@
 
 /* Hover with mouse */
 #ProductAutocomplete-list [id^="ProductAutocomplete-option"]:hover {
-  background-color:   rgba(0, 214, 214, 0.08);
+  background-color:   rgba(6, 186, 186, 0.08);
 
 }
 
 /* Keyboard navigation (arrow keys) */
 #ProductAutocomplete-list [aria-selected="true"],
 #ProductAutocomplete-list [id^="ProductAutocomplete-option"].active {
-  background-color:  rgba(0, 214, 214, 0.08);
+  background-color:  rgba(6, 186, 186, 0.08);
 
 }
 
