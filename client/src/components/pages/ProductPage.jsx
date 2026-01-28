@@ -5,20 +5,20 @@ import ProductImage from "../modules/product-page/ProductImage";
 import ProductDescription from "../modules/product-page/ProductDescription";
 import ProductInfo from "../modules/product-page/ProductInfo";
 import ProductIngredients from "../modules/product-page/ProductIngredients";
-import ProductRatings from "../modules/product-page/ProductRatings";
+import ProductReview from "../modules/product-page/ProductReview";
 import "./ProductPage.css";
 
 const ProductPage = ({user}) => {
   const { productID } = useParams();
   const [product, setProduct] = useState(null);
-  const [ratings, setRatings] = useState(null);
+  const [ratingsData, setRatingsData] = useState(null); // Changed: store all data here
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showFullIngredients, setShowFullIngredients] = useState(false);
 
   useEffect(() => {
     loadProduct();
-    loadRatings();
+    loadRatingsandReviews();
   }, [productID]);
 
   const loadProduct = async () => {
@@ -37,19 +37,16 @@ const ProductPage = ({user}) => {
     }
   };
 
-  const loadRatings = async () => {
+  const loadRatingsandReviews = async () => {
     try {
-      console.log('Loading ratings for product:', productID);
       const response = await fetch(`/api/products/${productID}/ratings`, {
         credentials: 'include'
       });
-      console.log('Ratings response status:', response.status);
-      if (!response.ok) throw new Error("Failed to get ratings");
+      if (!response.ok) throw new Error("Failed to get ratings and reviews");
       const data = await response.json();
-      console.log('Ratings data received:', data);
-      setRatings(data);
+      setRatingsData(data); // Changed: store entire response
     } catch (err) {
-      console.error("Couldn't load ratings:", err);
+      console.error("Couldn't load ratings and reviews:", err);
     }
   };
 
@@ -82,10 +79,10 @@ const ProductPage = ({user}) => {
       </div>
     );
   }
-  const handleRatingSuccess = () => {
-    loadRatings();
-  };
 
+  const handleRatingSuccess = () => {
+    loadRatingsandReviews();
+  };
 
   return (
     <div className="product-page-container">
@@ -94,8 +91,10 @@ const ProductPage = ({user}) => {
         <ProductDescription
           product={product}
           onOpenProductUrl={openProductUrl}
-          ratings = {ratings} user={user}
-          onRatingSuccess={handleRatingSuccess}/>
+          ratings={ratingsData} // Changed: pass entire ratingsData object
+          user={user}
+          onRatingSuccess={handleRatingSuccess}
+        />
       </div>
 
       <ProductInfo
@@ -110,6 +109,13 @@ const ProductPage = ({user}) => {
         onToggleIngredients={toggleIngredients}
       />
 
+      <ProductReview
+        productID={productID}
+        user={user}
+        userReview={ratingsData?.userReview}
+        otherReviews={ratingsData?.otherReviews ?? []}
+        onReviewSuccess={handleRatingSuccess} // Changed: use same handler
+      />
     </div>
   );
 };
