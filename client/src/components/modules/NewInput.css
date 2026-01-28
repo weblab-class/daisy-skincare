@@ -70,3 +70,34 @@
   margin: 10px 0;
   font-weight: bold;
 }
+
+.New-commentContainer {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 6px 10px;
+  border-radius: var(--m);
+  border: 2px solid #ddd;
+  background-color: white;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.New-commentContainer .New-input {
+  border: none;
+  margin: 0;
+  padding: 8px 10px;
+  background: transparent;
+  box-shadow: none;
+}
+
+.New-commentContainer .New-input:focus {
+  outline: none;
+}
+
+.New-commentContainer .New-button {
+  margin-left: auto;
+  padding: 6px 14px;
+  background-color: var(--aqua);
+  border-radius: var(--m);
+  font-size: 14px;
+}
