@@ -3,10 +3,11 @@ import { get, post } from "../../utilities.js";
 import { NewReview } from "../modules/NewInput.jsx";
 import { UserContext } from "../context/UserContext";
 import { useLocation, Link, Outlet } from "react-router-dom";
+import Review from "../pages/Review.jsx";
 
 import "./Feed.css";
 import Ratings from "../modules/Ratings";
-
+import newreview from "../../assets/newreview.png"; // Import the image
 
 const Feed = () => {
   const [ratings, setRatings] = useState([]);

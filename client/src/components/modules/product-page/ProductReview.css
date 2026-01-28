@@ -1,13 +1,13 @@
 /* modules/product-page/ProductReview.css */
 .product-review-section {
     margin: 2rem 0;
-    padding: 6px;
+    padding: 1.5rem;
     background: #fff;
     border-radius: 8px;
   }
 
   .product-review-section h2 {
-    margin-bottom: 6px;
+    margin-bottom: 1.5rem;
     font-size: 1.8rem;
     color: #333;
     font-weight: 600;
@@ -28,7 +28,7 @@
 
   /* Review Cards */
   .review-card {
-    padding: 6px;
+    padding: 1.5rem;
     background: #f9f9f9;
     border-radius: 8px;
     margin-bottom: 1rem;
@@ -36,7 +36,7 @@
   }
 
   .review-card.user-review {
-    padding: 6px;
+    padding: 1.5rem;
     background: #f9f9f9;
     border-radius: 8px;
     margin-bottom: 1rem;
@@ -100,7 +100,7 @@
   /* Empty States */
   .no-review,
   .no-reviews {
-    padding: 6px;
+    padding: 1.5rem;
     text-align: center;
     color: #888;
     font-style: italic;
