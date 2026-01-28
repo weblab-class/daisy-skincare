@@ -80,6 +80,12 @@ const NewReview = ({ addNewReview }) => {
     e.preventDefault();
     const { product, brand, rating_value, content, image , product_id} = values;
 
+    // Check if product exists in database
+    if (!product_id) {
+      alert("Please select a product from the database. You cannot add a rating for a product that doesn't exist.");
+      return;
+    }
+
     if (!product.trim() || !brand.trim() || !rating_value.trim() || !content.trim()) {
       alert("All fields except Image are required.");
       return;
