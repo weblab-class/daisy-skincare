@@ -74,7 +74,6 @@
     min-width: 0;
   }
 
-  /* Mobile responsiveness */
   @media (max-width: 968px) {
     .content-with-filters {
       flex-direction: column;
