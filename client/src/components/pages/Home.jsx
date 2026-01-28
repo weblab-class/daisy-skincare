@@ -13,15 +13,19 @@ const Home = () => {
 
   return (
     <>
-      <div className="Home-container"
-      style={{ backgroundImage: `url(${homepage})` }}>
+      <div
+        className="Home-container"
+        style={{ backgroundImage: `url(${homepage})` }}
+      >
         {/* homepage title */}
-        {/* could class names be renamed to be more concise? thanks! */}
         {isHomePage && (
-          <main className="relative flex flex-col items-center justify-start min-h-screen text-center px-4">
+          <main className="relative flex flex-col items-center justify-start min-h-screen text-center pt-5 px-4">
             <div className="space-y-2">
-              <h1 className="text-6xl md:text-8xl font-serif text-white tracking-tighter italic drop-shadow-lg">
-                Skincare Website{" "}
+              <h1 className="relative px-7 py-2">
+                <span className="absolute inset-0 bg-[#5976AC]/30 backdrop-blur-md rounded-xl shadow-[0_0_20px_rgba(0,212,255,0.5)]"></span>
+                <span className="text-7xl md:text-8xl font-serif text-[#5173a9] tracking-tighter italic drop-shadow-lg">
+                  Daisy
+                </span>
               </h1>
             </div>
           </main>

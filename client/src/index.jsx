@@ -7,6 +7,8 @@ import NotFound from "./components/pages/NotFound";
 import User from "./components/pages/User";
 import ProductSearch from "./components/pages/ProductSearch";
 import ProductPage from "./components/pages/ProductPage";
+import Feed from "./components/pages/Feed";
+import Review from "./components/pages/Review";
 
 import {
   createBrowserRouter,
@@ -40,5 +42,5 @@ const router = createBrowserRouter(
 ReactDOM.createRoot(document.getElementById("root")).render(
   <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
     <RouterProvider router={router} />
-  </GoogleOAuthProvider>
+  </GoogleOAuthProvider>,
 );
