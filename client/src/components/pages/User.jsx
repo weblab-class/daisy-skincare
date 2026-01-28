@@ -23,20 +23,20 @@ const User = () => {
 
   return (
     <div className="max-w-4xl mx-auto min-h-screen pt-12 px-6">
-      {/* Profile Header Card */}
+      {/* Profile Header*/}
       <div className="bg-white/60 backdrop-blur-xl rounded-[2rem] p-8 shadow-sm border border-white/40 flex flex-col items-center">
-        {/* Avatar with a 'Glow' ring */}
+        {/* Avatar */}
         <div className="relative group">
           <div className="absolute -inset-0.5 bg-gradient-to-r from-[#a3d0c9] to-[#00d4ff] rounded-full blur opacity-30 group-hover:opacity-60 transition duration-1000"></div>
           <div className="relative w-32 h-32 bg-gray-200 rounded-full border-4 border-white overflow-hidden shadow-inner">
-            {/* If user has an image, put it here */}
+            {/* User initial */}
             <div className="w-full h-full bg-[#f8fafc] flex items-center justify-center text-4xl text-gray-400">
               {user.name.charAt(0)}
             </div>
           </div>
         </div>
 
-        {/* Name & Bio */}
+        {/* Name */}
         <h1 className="mt-6 text-4xl font-serif italic text-slate-800 tracking-tight">
           {user.name}
         </h1>
@@ -48,7 +48,7 @@ const User = () => {
 
       {/* Main Content Grid */}
       <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-8">
-        {/* Right Side: Recent Products */}
+        {/* Recent Products */}
         <div className="md:col-span-2">
           <div className="flex items-center justify-between mb-6">
             <h4 className="text-xl font-serif italic text-slate-800">
