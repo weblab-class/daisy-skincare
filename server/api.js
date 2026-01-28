@@ -225,8 +225,6 @@ const buildFilter = (query) => {
 };
 
 // GET /api/products/:id/ratings endpoint
-// GET /api/products/:id/ratings endpoint
-// GET /api/products/:id/ratings endpoint
 router.get("/products/:id/ratings", async (req, res) => {
   try {
     const productId = req.params.id;

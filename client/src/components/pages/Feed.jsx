@@ -21,23 +21,8 @@ const Feed = () => {
     });
   }, []);
 
-  // submit new skincare review
-  // modified from before to handle ratings list better
   const submitNewReview = (reviewObj) => {
-    setRatings((prevRatings) => {
-      // Check if this review already exists (update case)
-      const existingIndex = prevRatings.findIndex(r => r._id === reviewObj._id);
-
-      if (existingIndex !== -1) {
-        // Update existing review
-        const newRatings = [...prevRatings];
-        newRatings[existingIndex] = reviewObj;
-        return newRatings;
-      } else {
-        // Add new review to the beginning
-        return [reviewObj, ...prevRatings];
-      }
-    });
+    setRatings((prevRatings) => [reviewObj, ...prevRatings]);
   };
 
   // combine ratings into list
@@ -50,6 +35,7 @@ const Feed = () => {
         key={`Review_${reviewObj._id}`}
         _id={reviewObj._id}
         creator_name={reviewObj.user_name}
+        creator_id={reviewObj.user_id}
         content={reviewObj.content}
         image={reviewObj.image}
         product={reviewObj.product}
