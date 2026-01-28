@@ -9,15 +9,8 @@ import "./NewInput.css";
 const NewComment = ({ reviewId, addNewComment }) => {
   const [content, setContent] = useState("");
 
-  const handleChange = (eOrValue, fieldName) => {
-    if (eOrValue && eOrValue.target) {
-      // Regular input event
-      const { name, value } = eOrValue.target;
-      setValues(prev => ({ ...prev, [name]: value }));
-    } else {
-      // Direct value from Autocomplete
-      setValues(prev => ({ ...prev, [fieldName]: eOrValue }));
-    }
+  const handleChange = (e) => {
+    setContent(e.target.value);
   };
 
   // submission and validation
