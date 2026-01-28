@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useLayoutEffect, useRef } from "react";
 import SingleReview from "./SingleReview";
 import CommentsBlock from "./CommentsBlock";
 import { get, post } from "../../utilities.js";
@@ -21,15 +21,44 @@ function getRandomDuck() {
 
 const Ratings = (props) => {
   const [comments, setComments] = useState([]);
-  const [leftDuck] = useState(getRandomDuck);
-  const [rightDuck] = useState(getRandomDuck);
+  const [leftDucks, setLeftDucks] = useState([]);
+  const [rightDucks, setRightDucks] = useState([]);
+  const contentRef = useRef(null);
 
   // renders existing comments
   useEffect(() => {
     get("/api/commentsfeed", { parent: props._id }).then((comments) => {
       setComments(comments);
     });
-  }, []);
+  }, [props._id]);
+
+  useLayoutEffect(() => {
+    const calculateDucks = () => {
+      if (contentRef.current) {
+        const reviewHeight = contentRef.current.clientHeight;
+        const duckHeight = 150; // Assuming a fixed height for the duck images
+        const numDucks = Math.floor(reviewHeight / duckHeight) || 1;
+
+        if (leftDucks.length === numDucks) {
+          return;
+        }
+
+        const newLeftDucks = [];
+        const newRightDucks = [];
+        for (let i = 0; i < numDucks; i++) {
+          newLeftDucks.push(getRandomDuck());
+          newRightDucks.push(getRandomDuck());
+        }
+        setLeftDucks(newLeftDucks);
+        setRightDucks(newRightDucks);
+      }
+    };
+
+    calculateDucks();
+    // Recalculate on window resize
+    window.addEventListener("resize", calculateDucks);
+    return () => window.removeEventListener("resize", calculateDucks);
+  }, [comments, props]);
 
   // add new comment function
   // reworked for clearer api organization
@@ -40,37 +69,37 @@ const Ratings = (props) => {
   return (
     <div className="Review-container">
       <div className="Review-left">
-        <img src={leftDuck} className="Review-duck" alt="decoration" />
-        <img src={rightDuck} className="Review-duck" alt="decoration" />
+        {leftDucks.map((duck, i) => (
+          <img key={i} src={duck} className="Review-duck" alt="decoration" />
+        ))}
       </div>
 
       {/** ratings divided into duck margins
        * and review with comments in center */}
       <div className="Review-center">
-        <SingleReview
-        _id={props._id}
-        creator_id={props.creator_id}
-        creator_name={props.creator_name}
-        content={props.content}
-        image={props.image}
-        product={props.product}
-        product_id={props.product_id}
-        brand={props.brand}
-        rating_value={props.rating_value}
-      />
+        <div ref={contentRef} className="Review-content-wrapper">
+          <SingleReview
+            _id={props._id}
+            creator_id={props.creator_id}
+            creator_name={props.creator_name}
+            content={props.content}
+            image={props.image}
+            product={props.product}
+            product_id={props.product_id}
+            brand={props.brand}
+            rating_value={props.rating_value}
+          />
 
-      {/** comments grouped together into block */}
-      <CommentsBlock
-        review={props}
-        comments={comments}
-        addNewComment={addNewComment}
-      />
+          {/** comments grouped together into block */}
+          <CommentsBlock review={props} comments={comments} addNewComment={addNewComment} />
+        </div>
       </div>
 
       {/** other duck margin on other side */}
       <div className="Review-right">
-        <img src={rightDuck} className="Review-duck" alt="decoration" />
-        <img src={leftDuck} className="Review-duck" alt="decoration" />
+        {rightDucks.map((duck, i) => (
+          <img key={i} src={duck} className="Review-duck" alt="decoration" />
+        ))}
       </div>
     </div>
   );

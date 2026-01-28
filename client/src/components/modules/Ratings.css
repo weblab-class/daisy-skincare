@@ -54,3 +54,14 @@
   cursor: pointer;
   color: var(--teal);
 }
+
+/* New styles for filling comments block whitespace */
+.Review-content-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Ensure it takes full height of parent */
+}
+
+.Review-content-wrapper > .Review-commentSection {
+  flex-grow: 1;
+}
