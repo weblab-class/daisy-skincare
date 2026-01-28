@@ -20,11 +20,11 @@ const Review = () => {
       <div className="bg-white/90 p-8 rounded-3xl shadow-2xl relative max-w-lg w-full border border-white/20">
         <button
           onClick={handleClose}
-          className="absolute top-4 right-4 text-purple-600 hover:scale-110 transition-transform font-bold"
+          className="absolute top-4 right-4 text-[#a1cdd7] hover:scale-110 transition-transform font-bold"
         >
           ✕
         </button>
-        <h2 className="text-2xl font-serif italic text-purple-700 mb-4 text-center">
+        <h2 className="text-2xl font-sans-serif font-bold text-[#a1cdd7] mb-4 text-center">
           Write a Review!
         </h2>
         <NewReview addNewReview={submitNewReview} />
