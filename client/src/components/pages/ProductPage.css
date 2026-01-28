@@ -155,7 +155,7 @@
 
 .product-page-container .info-section li:before {
     content: "• ";
-    color: #4CAF50;
+    color: var(--aqua);
     font-weight: bold;
     margin-right: 8px;
 }

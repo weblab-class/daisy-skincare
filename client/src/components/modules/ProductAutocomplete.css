@@ -15,8 +15,8 @@
 }
 
 .ProductAutocomplete-input:focus {
-  border-color: rgb(149, 173, 255);
-  box-shadow: 0 0 0 3px rgba(149, 173, 255, 0.25);
+  border-color: var(--aqua);
+  box-shadow: 0 0 0 2px rgba(0, 214, 214, 0.23); /* aqua glow */
 }
 
 .ProductAutocomplete-list {
