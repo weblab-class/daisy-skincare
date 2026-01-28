@@ -2,25 +2,8 @@ import React, { useState, useEffect } from "react";
 import { get } from "../../utilities.js";
 import { useParams } from "react-router-dom";
 
-import SingleReview from "./SingleReview";
+import Ratings from "./Ratings";
 import "./Ratings.css";
-
-// user ratings without comments component
-const UserRatings = (props) => {
-  return (
-    <div className="Review-container">
-      <SingleReview
-        _id={props._id}
-        content={props.content}
-        image={props.image}
-        product={props.product}
-        product_id={props.product_id}
-        brand={props.brand}
-        rating_value={props.rating_value}
-      />
-    </div>
-  );
-};
 
 // recent ratings show on user profile
 const Recent = () => {
@@ -32,7 +15,6 @@ const Recent = () => {
     if (!userID) return;
     get("/api/userratings", { user_id: userID }).then((data) => {
       setRatings(data);
-      console.log("data", data);
     });
   }, [userID]);
 
@@ -43,9 +25,11 @@ const Recent = () => {
   return (
     <div className="Feed-container">
       {ratings.map((review) => (
-        <UserRatings
+        <Ratings
           key={`Review_${review._id}`}
           _id={review._id}
+          creator_name={review.user_name}
+          creator_id={review.user_id}
           content={review.content}
           image={review.image}
           product={review.product}
@@ -58,4 +42,4 @@ const Recent = () => {
   );
 };
 
-export { UserRatings, Recent };
+export { Recent };
