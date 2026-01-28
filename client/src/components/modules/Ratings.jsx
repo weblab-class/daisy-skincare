@@ -54,6 +54,7 @@ const Ratings = (props) => {
         content={props.content}
         image={props.image}
         product={props.product}
+        product_id={props.product_id}
         brand={props.brand}
         rating_value={props.rating_value}
       />

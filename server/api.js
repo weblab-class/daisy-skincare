@@ -17,21 +17,82 @@ router.get("/feed", (req, res) => {
   });
 });
 
-// POST /api/rating endpoint
-router.post("/rating", auth.ensureLoggedIn, (req, res) => {
-  console.log("req.body:", req.body);
-  const newReview = new Rating({
-    user_id: req.user._id,
-    user_name: req.user.name,
-    rating_value: req.body.rating_value,
-    product: req.body.product,
-    brand: req.body.brand,
-    image: req.body.image,
-    content: req.body.content,
-  });
-  console.log("newReview:", newReview);
+// POST /api/rating – if product/brand is new, create in Product collection; always create/update rating
+router.post("/rating", auth.ensureLoggedIn, async (req, res) => {
+  try {
+    console.log("req.body:", req.body);
+    const productName = (req.body.product || "").trim();
+    const brandName = (req.body.brand || "").trim();
+    const productId = req.body.product_id;
 
-  newReview.save().then((rating) => res.send(rating));
+    if (productName || brandName) {
+      try {
+        const nameToUse = productName || brandName;
+        const query = { name: nameToUse };
+        if (brandName) {
+          query.brand = brandName;
+        } else {
+          query.$or = [{ brand: null }, { brand: "" }, { brand: { $exists: false } }];
+        }
+        const existing = await Product.findOne(query);
+        if (!existing) {
+          await Product.create({
+            name: nameToUse,
+            brand: brandName || undefined,
+            category: "Uncategorized",
+          });
+        }
+      } catch (err) {
+        console.error("Product create error (rating will still be saved):", err);
+      }
+    }
+
+    // Build the query to find existing rating
+    const query = { user_id: req.user._id };
+    query.product = productName;
+    query.brand = brandName;
+
+
+    console.log("Searching for existing rating with query:", query);
+    const existingRating = await Rating.findOne(query);
+
+    if (existingRating) {
+      // Update existing rating
+      existingRating.rating_value = req.body.rating_value;
+      existingRating.content = req.body.content;
+      existingRating.product = req.body.product;
+      existingRating.brand = req.body.brand;
+      existingRating.image = req.body.image;
+      existingRating.user_name = req.user.name;
+      existingRating.user_id = req.user._id;
+
+      if (productId) {
+        existingRating.product_id = productId;
+      }
+
+      const updatedRating = await existingRating.save();
+      console.log("Updated existing rating:", updatedRating);
+      res.send(updatedRating);
+    } else {
+      // Create new rating
+      const newReview = new Rating({
+        user_id: req.user._id,
+        user_name: req.user.name,
+        product_id: productId,
+        rating_value: req.body.rating_value,
+        product: req.body.product,
+        brand: req.body.brand,
+        image: req.body.image,
+        content: req.body.content,
+      });
+      console.log("Creating new review:", newReview);
+      const rating = await newReview.save();
+      res.send(rating);
+    }
+  } catch (err) {
+    console.error("POST /rating error:", err);
+    res.status(500).send({ error: "Failed to save rating" });
+  }
 });
 
 // GET /api/commentsfeed endpoint
@@ -163,6 +224,129 @@ const buildFilter = (query) => {
   return filter;
 };
 
+// GET /api/products/:id/ratings endpoint
+router.get("/products/:id/ratings", async (req, res) => {
+  try {
+    const productId = req.params.id;
+    const userID = req.user?._id;
+
+    const product = await Product.findById(productId);
+    if (!product) {
+      return res.status(404).send({ error: 'Product not found' });
+    }
+
+    const ratingQuery = { product: product.name };
+    if (product.brand) {
+      ratingQuery.brand = product.brand;
+    }
+
+    const allRatings = await Rating.find(ratingQuery);
+
+    const response = {
+      userRating: null,
+      friendsAverage: null,
+      friendsCount: 0,
+      overallAverage: null,
+      overallCount: allRatings.length
+    };
+
+    if (allRatings.length > 0) {
+      const sum = allRatings.reduce((total, r) => total + (r.rating_value || 0), 0);
+      response.overallAverage = sum / allRatings.length;
+    }
+
+    if (userID) {
+      // Convert userID to string for comparison
+      const userIdString = userID.toString();
+
+      // Find user's rating by comparing ObjectId strings
+      const userRatingDoc = allRatings.find(r => r.user_id === userIdString);
+      response.userRating = userRatingDoc?.rating_value || null;
+
+      // Get user's friends
+      const user = await User.findById(userID);
+
+      if (user && user.friends && user.friends.length > 0) {
+        // Convert friend ObjectIds to strings
+        const friendIdStrings = user.friends.map(id => id.toString());
+
+        // Filter ratings from friends (excluding current user)
+        const friendRatings = allRatings.filter(r =>
+          friendIdStrings.includes(r.user_id) && r.user_id !== userIdString
+        );
+
+        response.friendsCount = friendRatings.length;
+
+        if (friendRatings.length > 0) {
+          const friendSum = friendRatings.reduce((total, r) => total + (r.rating_value || 0), 0);
+          response.friendsAverage = friendSum / friendRatings.length;
+        }
+      }
+    }
+
+    res.send(response);
+
+  } catch (err) {
+    console.error("Error fetching product ratings:", err);
+    res.status(500).send({ error: 'Failed to fetch ratings' });
+  }
+});
+
+// POST /api/products/:id/rate - Add/update a quick rating for a product
+router.post("/products/:id/rate", auth.ensureLoggedIn, async (req, res) => {
+  try {
+    const productId = req.params.id;
+    const { rating_value } = req.body;
+
+    // Validate rating
+    if (!rating_value || rating_value < 1 || rating_value > 5) {
+      return res.status(400).send({ error: 'Rating must be between 1 and 5' });
+    }
+
+    // Get the product
+    const product = await Product.findById(productId);
+    if (!product) {
+      return res.status(404).send({ error: 'Product not found' });
+    }
+
+    // Build query to find existing rating
+    const existingQuery = {
+      user_id: req.user._id,
+      product: product.name
+    };
+    if (product.brand) {
+      existingQuery.brand = product.brand;
+    }
+
+    // Check if user already has a rating for this product
+    const existingRating = await Rating.findOne(existingQuery);
+
+    if (existingRating) {
+      // Update existing rating
+      existingRating.rating_value = rating_value;
+      await existingRating.save();
+      res.send(existingRating);
+    } else {
+      // Create new rating
+      const newRating = new Rating({
+        user_id: req.user._id,
+        user_name: req.user.name,
+        rating_value: rating_value,
+        product: product.name,
+        brand: product.brand || '',
+        image: product.image_url || '',
+        content: '' // Empty content for quick ratings
+      });
+      const savedRating = await newRating.save();
+      res.send(savedRating);
+    }
+
+  } catch (err) {
+    console.error("Error saving product rating:", err);
+    res.status(500).send({ error: 'Failed to save rating' });
+  }
+});
+
 // implement GET /api/products/:id endpoint
 router.get("/products/:id", async (req, res) => {
   try {
@@ -177,13 +361,36 @@ router.get("/products/:id", async (req, res) => {
   }
 });
 
+// GET /api/brands – distinct brands from products, optional search, limit
+router.get("/brands", async (req, res) => {
+  try {
+    const { search, limit } = req.query;
+    const cap = Math.min(Math.max(Number(limit) || 15, 1), 50);
+    const match = {};
+    if (search && String(search).trim()) {
+      match.brand = { $regex: String(search).trim(), $options: "i" };
+    } else {
+      match.brand = { $exists: true, $nin: [null, ""] };
+    }
+    const rows = await Product.aggregate([
+      { $match: match },
+      { $group: { _id: "$brand" } },
+      { $sort: { _id: 1 } },
+      { $limit: cap },
+    ]);
+    res.send(rows.map((r) => r._id).filter(Boolean));
+  } catch (err) {
+    console.error("error getting brands:", err);
+    res.status(500);
+    res.send([]);
+  }
+});
+
 // implement GET /api/products endpoint
 router.get("/products", async (req, res) => {
   try {
-    const { search } = req.query;
-
+    const { search, limit } = req.query;
     let query = {};
-
     if (search) {
       query = {
         $or: [
@@ -192,13 +399,16 @@ router.get("/products", async (req, res) => {
         ],
       };
     }
-
-    const products = await Product.find(query);
+    let q = Product.find(query);
+    if (limit && Number(limit) > 0) {
+      q = q.limit(Number(limit)).select("name _id");
+    }
+    const products = await q;
     res.send(products);
   } catch (err) {
-    console.log("error getting product: ", err);
+    console.log("error getting product:", err);
     res.status(500);
-    res.send({});
+    res.send([]);
   }
 });
 

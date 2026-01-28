@@ -14,6 +14,7 @@ const UserRatings = (props) => {
         content={props.content}
         image={props.image}
         product={props.product}
+        product_id={props.product_id}
         brand={props.brand}
         rating_value={props.rating_value}
       />
@@ -48,6 +49,7 @@ const Recent = () => {
           content={review.content}
           image={review.image}
           product={review.product}
+          product_id={review.product_id}
           brand={review.brand}
           rating_value={review.rating_value}
         />

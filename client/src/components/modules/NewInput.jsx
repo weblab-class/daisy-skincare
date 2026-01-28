@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { post } from "../../utilities";
+import ProductAutocomplete from "./ProductAutocomplete";
+import BrandAutocomplete from "./BrandAutocomplete";
 
 import "./NewInput.css";
 
@@ -7,8 +9,15 @@ import "./NewInput.css";
 const NewComment = ({ reviewId, addNewComment }) => {
   const [content, setContent] = useState("");
 
-  const handleChange = (e) => {
-    setContent(e.target.value);
+  const handleChange = (eOrValue, fieldName) => {
+    if (eOrValue && eOrValue.target) {
+      // Regular input event
+      const { name, value } = eOrValue.target;
+      setValues(prev => ({ ...prev, [name]: value }));
+    } else {
+      // Direct value from Autocomplete
+      setValues(prev => ({ ...prev, [fieldName]: eOrValue }));
+    }
   };
 
   // submission and validation
@@ -46,21 +55,30 @@ const NewComment = ({ reviewId, addNewComment }) => {
 const NewReview = ({ addNewReview }) => {
   const [values, setValues] = useState({
     product: "",
+    product_id: "",
     brand: "",
     rating_value: "",
     content: "",
     image: "",
   });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setValues((prevValues) => ({ ...prevValues, [name]: value }));
+  const handleChange = (eOrValue, fieldName) => {
+    if (eOrValue && eOrValue.target) {
+      // Normal <input> or <textarea>
+      const { name, value } = eOrValue.target;
+      setValues(prev => ({ ...prev, [name]: value }));
+    } else if (fieldName) {
+      // Autocomplete value
+      setValues(prev => ({ ...prev, [fieldName]: eOrValue }));
+    } else {
+      console.error("handleChange called incorrectly", eOrValue, fieldName);
+    }
   };
 
   // submission and validation
   const handleSubmit = (e) => {
     e.preventDefault();
-    const { product, brand, rating_value, content, image } = values;
+    const { product, brand, rating_value, content, image , product_id} = values;
 
     if (!product.trim() || !brand.trim() || !rating_value.trim() || !content.trim()) {
       alert("All fields except Image are required.");
@@ -72,7 +90,7 @@ const NewReview = ({ addNewReview }) => {
       return;
     }
 
-    const body = { product, brand, rating_value, content, image };
+    const body = { product, product_id, brand, rating_value, content, image };
     console.log("NewReview body:", body);
 
     post("/api/rating", body)
@@ -84,6 +102,7 @@ const NewReview = ({ addNewReview }) => {
     setValues({
       product: "",
       brand: "",
+      product_id: "",
       rating_value: "",
       content: "",
       image: "",
@@ -92,21 +111,26 @@ const NewReview = ({ addNewReview }) => {
 
   return (
     <div className="New-reviewContainer">
-      <input
-        type="text"
-        name="product"
-        placeholder="Product"
+      <ProductAutocomplete
         value={values.product}
-        onChange={handleChange}
-        className="New-input"
+        onChange={(productName, productId) =>{
+          console.log("ProductAutocomplete onChange called with:", { productName, productId });
+          setValues(prev => ({
+            ...prev,
+            product: productName,
+            product_id: productId || ""
+          }));
+        }}
+        className="New-input-wrap"
+        inputClassName="New-input"
+        aria-label="Product"
       />
-      <input
-        type="text"
-        name="brand"
-        placeholder="Brand"
+      <BrandAutocomplete
         value={values.brand}
-        onChange={handleChange}
-        className="New-input"
+        onChange={(v) => handleChange(v, "brand")}
+        className="New-input-wrap"
+        inputClassName="New-input"
+        aria-label="Brand"
       />
       <input
         type="number"

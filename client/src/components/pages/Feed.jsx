@@ -23,10 +23,8 @@ const Feed = () => {
     });
   }, []);
 
-  // submit new skincare review
-  // modified from before to handle ratings list better
   const submitNewReview = (reviewObj) => {
-    setRatings([reviewObj].concat(ratings));
+    setRatings((prevRatings) => [reviewObj, ...prevRatings]);
   };
 
   // combine ratings into list
@@ -39,9 +37,11 @@ const Feed = () => {
         key={`Review_${reviewObj._id}`}
         _id={reviewObj._id}
         creator_name={reviewObj.user_name}
+        creator_id={reviewObj.user_id}
         content={reviewObj.content}
         image={reviewObj.image}
         product={reviewObj.product}
+        product_id={reviewObj.product_id}
         brand={reviewObj.brand}
         rating_value={reviewObj.rating_value}
       />
