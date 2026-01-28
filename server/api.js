@@ -17,7 +17,7 @@ router.get("/feed", (req, res) => {
   });
 });
 
-// POST /api/rating – if product/brand is new, create in Product collection; always create/update rating
+// POST /api/rating – create/update rating
 router.post("/rating", auth.ensureLoggedIn, async (req, res) => {
   try {
     console.log("req.body:", req.body);
@@ -262,10 +262,8 @@ router.get("/products/:id/ratings", async (req, res) => {
     }
 
     if (userID) {
-      // Convert userID to string for comparison
       const userIdString = userID.toString();
 
-      // Find user's rating by comparing ObjectId strings
       const userRatingDoc = allRatings.find(r => r.user_id === userIdString);
       if (userRatingDoc) {
         response.userRating = userRatingDoc?.rating_value || null;
@@ -274,14 +272,11 @@ router.get("/products/:id/ratings", async (req, res) => {
         }
       }
 
-      // Get user's friends
       const user = await User.findById(userID);
 
       if (user && user.friends && user.friends.length > 0) {
-        // Convert friend ObjectIds to strings
         const friendIdStrings = user.friends.map(id => id.toString());
 
-        // Filter ratings from friends (excluding current user)
         const friendRatings = allRatings.filter(r =>
           friendIdStrings.includes(r.user_id) && r.user_id !== userIdString
         );
@@ -319,18 +314,16 @@ router.post("/products/:id/rate", auth.ensureLoggedIn, async (req, res) => {
     const productId = req.params.id;
     const { rating_value,content } = req.body;
 
-    // Validate rating
     if (!rating_value || rating_value < 1 || rating_value > 5) {
       return res.status(400).send({ error: 'Rating must be between 1 and 5' });
     }
 
-    // Get the product
     const product = await Product.findById(productId);
     if (!product) {
       return res.status(404).send({ error: 'Product not found' });
     }
 
-    // Build query to find existing rating
+
     const existingQuery = {
       user_id: req.user._id,
       product: product.name
@@ -339,17 +332,14 @@ router.post("/products/:id/rate", auth.ensureLoggedIn, async (req, res) => {
       existingQuery.brand = product.brand;
     }
 
-    // Check if user already has a rating for this product
     const existingRating = await Rating.findOne(existingQuery);
 
     if (existingRating) {
-      // Update existing rating
       existingRating.rating_value = rating_value;
       existingRating.content = content;
       await existingRating.save();
       res.send(existingRating);
     } else {
-      // Create new rating
       const newRating = new Rating({
         user_id: req.user._id,
         user_name: req.user.name,
