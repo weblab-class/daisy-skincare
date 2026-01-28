@@ -31,9 +31,8 @@ const router = createBrowserRouter(
         <Route path="user/:userID" element={<User />} />
         <Route path="product" element={<ProductSearch />} />
         <Route path="product/:productID" element={<ProductPage />} />
-        <Route path="feed" element={<Feed />}>
-          <Route path="newReview" element={<Review />} />
-        </Route>
+        <Route path="feed" element={<Feed />} />
+        <Route path="newReview" element={<Review />} />
       </Route>
 
       {/** error page routing */}

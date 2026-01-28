@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, Link } from "react-router-dom";
 
 import NavBar from "./modules/NavBar";
 import "../utilities.css";
@@ -42,9 +42,19 @@ const App = () => {
   };
 
   return (
-    <UserContext.Provider value={ userID }>
+    <UserContext.Provider value={userID}>
       <NavBar handleLogin={handleLogin} handleLogout={handleLogout} />
       <div className="App-container">
+        {/*Button*/}
+        {userID && (
+          <Link
+            to="/newReview"
+            className="fixed bottom-10 right-10 w-23 h-23 bg-[#a3d0c9] text-white rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform z-[100] text-3xl"
+          >
+            +
+          </Link>
+        )}
+
         <Outlet />
       </div>
     </UserContext.Provider>

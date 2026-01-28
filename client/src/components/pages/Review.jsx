@@ -4,20 +4,22 @@ import { NewReview } from "../modules/NewInput.jsx";
 
 const Review = () => {
   const navigate = useNavigate();
-  const { addNewReview } = useOutletContext();
 
   //   Logic for reviews
   const submitNewReview = (reviewObj) => {
-    addNewReview(reviewObj);
-    navigate("/feed");
+    handleClose;
+  };
+
+  const handleClose = () => {
+    navigate(-1);
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 backdrop-blur-sm">
-      <div className="absolute inset-0" onClick={() => navigate("/")}></div>
+    <div className="fixed inset-0 z-[110] flex items-center justify-center bg-black/40 backdrop-blur-sm">
+      <div className="absolute inset-0" onClick={handleClose}></div>
       <div className="bg-white/90 p-8 rounded-3xl shadow-2xl relative max-w-lg w-full border border-white/20">
         <button
-          onClick={() => navigate("/feed")}
+          onClick={handleClose}
           className="absolute top-4 right-4 text-purple-600 hover:scale-110 transition-transform font-bold"
         >
           ✕
