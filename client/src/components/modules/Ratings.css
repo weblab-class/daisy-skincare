@@ -1,5 +1,5 @@
 .Review-container {
-  background-color: var(--white);
+  background-color: transparent;
   display: flex;
   align-items: stretch;
 
@@ -46,6 +46,18 @@
   height: auto;
 }
 
+.review-body {
+  margin-top: 0.75rem;
+}
+
+.review-image {
+  margin-top: 1rem;
+  width: 40%;
+  height: 40%;
+  object-fit: cover;
+  border-radius: var(--m);
+}
+
 .Review-link {
   text-decoration: none;
   color: inherit;
@@ -66,4 +78,13 @@
 
 .Review-content-wrapper > .Review-commentSection {
   flex-grow: 1;
+}
+
+.review-card {
+  width: 100%;
+  box-sizing: border-box;
+  background-color: transparent;
+  border-radius: var(--m);
+  padding: var(--s);
+  box-shadow: 0 0 4px rgba(0, 128, 128, 0.5);
 }
