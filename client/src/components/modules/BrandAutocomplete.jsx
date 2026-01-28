@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { get } from "../../utilities";
-import { fuzzyFilter, highlightMatches } from "./fuzzySearch";
+import { fuzzyFilter, highlightMatches } from "./FuzzySearch.jsx";
 import "./ProductAutocomplete.css";
 
 const SUGGESTION_LIMIT = 30;

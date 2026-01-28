@@ -15,14 +15,14 @@
 }
 
 /* Hover with mouse */
-#ProductAutocomplete-list [id^="ProductAutocomplete-option"]:hover {
+.ProductAutocomplete-item:hover {
   background-color:   rgba(6, 186, 186, 0.08);
 
 }
 
 /* Keyboard navigation (arrow keys) */
-#ProductAutocomplete-list [aria-selected="true"],
-#ProductAutocomplete-list [id^="ProductAutocomplete-option"].active {
+.ProductAutocomplete-item[aria-selected="true"],
+.ProductAutocomplete-item.active {
   background-color:  rgba(6, 186, 186, 0.08);
 
 }
