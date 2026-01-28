@@ -16,6 +16,7 @@ const ProductsGrid = ({ products }) => {
   // load next set of products
   const loadNextProducts = () => {
     setStartIndex((prevIndex) => prevIndex + productsPerPage);
+    window.scrollTo(0, 0)
   };
 
   return (
