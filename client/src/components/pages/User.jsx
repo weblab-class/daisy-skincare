@@ -23,8 +23,7 @@ const User = () => {
   }
 
   return (
-    <div className="max-w-4xl mx-auto min-h-screen"
-    style={{ backgroundImage: `url(${vines})` }}>
+    <div className="max-w-4xl mx-auto min-h-screen">
       {/* Profile Header*/}
       <div className="bg-white/60 backdrop-blur-xl rounded-[2rem] p-8 shadow-sm border
       border-white/40 flex flex-col items-center">
