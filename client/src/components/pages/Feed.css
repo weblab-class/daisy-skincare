@@ -1,6 +1,6 @@
 .Feed-container {
   width: 100%;
-  background-color: var(--primary);
+  min-height: 100vh;
 }
 
 .Feed-review {

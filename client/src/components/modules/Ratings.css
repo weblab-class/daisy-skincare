@@ -23,7 +23,7 @@
 
 .Review-body,
 .Review-commentSection {
-  padding: var(--m) var(--l);
+  padding: var(--s);
 }
 
 .Review-content {
