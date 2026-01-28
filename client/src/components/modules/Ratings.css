@@ -22,6 +22,7 @@
 .Review-body,
 .Review-commentSection {
   padding: var(--m) var(--l);
+  row-gap: 30px;
 }
 
 .Review-content {
@@ -63,4 +64,9 @@
 
 .Review-content-wrapper > .Review-commentSection {
   flex-grow: 1;
+}
+
+.Rating-display {
+    display: flex;
+    align-self: flex-end;
 }

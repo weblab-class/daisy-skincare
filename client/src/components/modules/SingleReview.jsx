@@ -9,12 +9,6 @@ const SingleReview = (props) => {
 
   return (
     <div className="Review-body">
-      {hasValidImage && (
-        <div className="Review-image-container">
-          <img src={props.image} alt={props.product} className="Review-image"/>
-        </div>
-      )}
-
       {/** review written text, ratings values and link to user */}
       <Link to={`/user/${props.creator_id}`} className="User-link User-bold">
         {props.creator_name}
@@ -32,6 +26,16 @@ const SingleReview = (props) => {
       <p className="Review-content">Brand: {props.brand}</p>
       <p className="Review-content">Rating: {props.rating_value}</p>
       <p className="Review-content">{props.content}</p>
+
+      {hasValidImage && (
+        <div className="Review-image-container">
+          <img
+            src={props.image}
+            alt={props.product}
+            className="Review-image"
+          />
+        </div>
+      )}
     </div>
   );
 };
