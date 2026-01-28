@@ -209,7 +209,7 @@
     padding: 20px;
     max-width: 1200px;
     margin: 0 auto;
-    background: white;
+    background: var(--lightgreen);
     min-height: 100vh;
     background-repeat: repeat;
     background-position: top left;
@@ -233,15 +233,18 @@
     align-items: center;
     flex-wrap: wrap;
     margin-bottom: 20px;
+    color: black;
 }
 
 .search-form .ProductAutocomplete {
     flex: 1;
     min-width: 200px;
+    color: black;
 }
 
 .search-input {
     width: 100%;
+    color: black;
 }
 
 .loading-message,
