@@ -41,6 +41,7 @@ const Feed = () => {
         content={reviewObj.content}
         image={reviewObj.image}
         product={reviewObj.product}
+        product_id={reviewObj.product_id}
         brand={reviewObj.brand}
         rating_value={reviewObj.rating_value}
       />

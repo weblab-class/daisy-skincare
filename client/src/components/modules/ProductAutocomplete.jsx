@@ -70,8 +70,9 @@ const ProductAutocomplete = ({
 
   const selectItem = (product) => {
     const name = product?.name;
+    const id = product?._id;
     if (name != null) {
-      onChange(name);
+      onChange(name, id);
       setOpen(false);
       setSuggestions([]);
     }
@@ -120,7 +121,7 @@ const ProductAutocomplete = ({
       <input
         type="text"
         value={value}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={(e) => onChange(e.target.value,"")}
         onFocus={() => setOpen(true)}
         onKeyDown={handleKeyDown}
         placeholder={placeholder}

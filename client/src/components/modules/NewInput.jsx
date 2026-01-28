@@ -55,6 +55,7 @@ const NewComment = ({ reviewId, addNewComment }) => {
 const NewReview = ({ addNewReview }) => {
   const [values, setValues] = useState({
     product: "",
+    product_id: "",
     brand: "",
     rating_value: "",
     content: "",
@@ -77,7 +78,7 @@ const NewReview = ({ addNewReview }) => {
   // submission and validation
   const handleSubmit = (e) => {
     e.preventDefault();
-    const { product, brand, rating_value, content, image } = values;
+    const { product, brand, rating_value, content, image , product_id} = values;
 
     if (!product.trim() || !brand.trim() || !rating_value.trim() || !content.trim()) {
       alert("All fields except Image are required.");
@@ -89,7 +90,7 @@ const NewReview = ({ addNewReview }) => {
       return;
     }
 
-    const body = { product, brand, rating_value, content, image };
+    const body = { product, product_id, brand, rating_value, content, image };
     console.log("NewReview body:", body);
 
     post("/api/rating", body)
@@ -101,6 +102,7 @@ const NewReview = ({ addNewReview }) => {
     setValues({
       product: "",
       brand: "",
+      product_id: "",
       rating_value: "",
       content: "",
       image: "",
@@ -111,7 +113,14 @@ const NewReview = ({ addNewReview }) => {
     <div className="New-reviewContainer">
       <ProductAutocomplete
         value={values.product}
-        onChange={(v) => handleChange(v, "product")}
+        onChange={(productName, productId) =>{
+          console.log("ProductAutocomplete onChange called with:", { productName, productId });
+          setValues(prev => ({
+            ...prev,
+            product: productName,
+            product_id: productId || ""
+          }));
+        }}
         className="New-input-wrap"
         inputClassName="New-input"
         aria-label="Product"
