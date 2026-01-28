@@ -20,8 +20,8 @@ const SingleReview = (props) => {
         {props.creator_name}
       </Link>
 
-      <div className="Rating-display">
-        <div className="Rating-circle">
+      <div className="rating-display">
+        <div className="rating-circle">
           {Number(props.rating_value).toFixed(1)}
         </div>
       </div>

@@ -1,45 +1,79 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useRef, useEffect, useLayoutEffect } from "react";
 import { get } from "../../utilities.js";
 import { useParams } from "react-router-dom";
 
-import Ratings from "./Ratings";
+import SingleReview from "./SingleReview";
 import "./Ratings.css";
 
-// recent ratings show on user profile
-const Recent = () => {
-  let userID = useParams().userID;
-  const [ratings, setRatings] = useState([]);
+import flower from "../../assets/margins/margin-flower.png";
+import tie from "../../assets/margins/margin-tie.png";
+import small from "../../assets/margins/margin-small.png";
+import swim from "../../assets/margins/margin-swim.png";
+import bow from "../../assets/margins/margin-bow.png";
+import darktie from "../../assets/margins/margin-darktie.png";
 
-  // get user's recent
+const ducks = [flower, tie, small, swim, bow, darktie];
+
+function getRandomDuck() {
+  return ducks[Math.floor(Math.random() * ducks.length)];
+}
+
+export const Recent = () => {
+  const { userID } = useParams();
+
+  const [ratings, setRatings] = useState([]);
+  const [leftDucks, setLeftDucks] = useState([]);
+  const [rightDucks, setRightDucks] = useState([]);
+
+  const contentRef = useRef(null);
+
   useEffect(() => {
     if (!userID) return;
     get("/api/userratings", { user_id: userID }).then((data) => {
-      setRatings(data);
+      setRatings(Array.isArray(data) ? data : data.ratings);
     });
   }, [userID]);
+
+  useLayoutEffect(() => {
+    if (!contentRef.current) return;
+
+    const calculateDucks = () => {
+      const reviewHeight = contentRef.current.clientHeight;
+      const duckHeight = 150;
+      const numDucks = Math.max(1, Math.floor(reviewHeight / duckHeight));
+
+      setLeftDucks(Array.from({ length: numDucks }, getRandomDuck));
+      setRightDucks(Array.from({ length: numDucks }, getRandomDuck));
+    };
+
+    calculateDucks();
+    window.addEventListener("resize", calculateDucks);
+    return () => window.removeEventListener("resize", calculateDucks);
+  }, [ratings.length]);
 
   if (ratings.length === 0) {
     return <div className="Feed-container">No ratings yet!</div>;
   }
 
   return (
-    <div className="Feed-container">
-      {ratings.map((review) => (
-        <Ratings
-          key={`Review_${review._id}`}
-          _id={review._id}
-          creator_name={review.user_name}
-          creator_id={review.user_id}
-          content={review.content}
-          image={review.image}
-          product={review.product}
-          product_id={review.product_id}
-          brand={review.brand}
-          rating_value={review.rating_value}
-        />
-      ))}
+    <div className="Review-container">
+      <div className="Review-left">
+        {leftDucks.map((duck, i) => (
+          <img key={i} src={duck} className="Review-duck" alt="decoration" />
+        ))}
+      </div>
+
+      <div className="Review-center" ref={contentRef}>
+        {ratings.map((review) => (
+          <SingleReview key={review._id} {...review} />
+        ))}
+      </div>
+
+      <div className="Review-right">
+        {rightDucks.map((duck, i) => (
+          <img key={i} src={duck} className="Review-duck" alt="decoration" />
+        ))}
+      </div>
     </div>
   );
 };
-
-export { Recent };
