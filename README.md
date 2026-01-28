@@ -1,5 +1,5 @@
 **Daisy**
-Brief description of your project.
+Social network for skincare sidequests!
 
 ## Third-Party Libraries & APIs
 
