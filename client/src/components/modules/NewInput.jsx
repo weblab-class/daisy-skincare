@@ -90,7 +90,7 @@ const NewReview = ({ addNewReview }) => {
       return;
     }
 
-    const body = { product, brand, rating_value, content, image };
+    const body = { product, product_id, brand, brand_id, rating_value, content, image };
     console.log("NewReview body:", body);
 
     post("/api/rating", body)
@@ -124,22 +124,6 @@ const NewReview = ({ addNewReview }) => {
         inputClassName="New-input"
         aria-label="Brand"
       />
-      {/* <input
-        type="text"
-        name="product"
-        placeholder="Product"
-        value={values.product}
-        onChange={handleChange}
-        className="New-input"
-      />
-      <input
-        type="text"
-        name="brand"
-        placeholder="Brand"
-        value={values.brand}
-        onChange={handleChange}
-        className="New-input"
-      /> */}
       <input
         type="number"
         name="rating_value"

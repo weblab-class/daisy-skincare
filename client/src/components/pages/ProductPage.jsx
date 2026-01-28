@@ -8,7 +8,7 @@ import ProductIngredients from "../modules/product-page/ProductIngredients";
 import ProductRatings from "../modules/product-page/ProductRatings";
 import "./ProductPage.css";
 
-const ProductPage = () => {
+const ProductPage = ({user}) => {
   const { productID } = useParams();
   const [product, setProduct] = useState(null);
   const [ratings, setRatings] = useState(null);
@@ -82,15 +82,22 @@ const ProductPage = () => {
       </div>
     );
   }
+  const handleRatingSuccess = () => {
+    loadRatings();
+  };
 
 
   return (
     <div className="product-page-container">
       <div className="header">
         <ProductImage imageUrl={product.image_url} name={product.name} />
-        <ProductDescription product={product} onOpenProductUrl={openProductUrl} ratings = {ratings}/>
+        <ProductDescription
+          product={product}
+          onOpenProductUrl={openProductUrl}
+          ratings = {ratings} user={user}
+          onRatingSuccess={handleRatingSuccess}/>
       </div>
-      
+
       <ProductInfo
         skincareConcerns={product.skincare_concerns ?? []}
         skinType={product.skin_type ?? []}

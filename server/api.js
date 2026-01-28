@@ -17,12 +17,13 @@ router.get("/feed", (req, res) => {
   });
 });
 
-// POST /api/rating – if product/brand is new, create in Product collection; always create rating
+// POST /api/rating – if product/brand is new, create in Product collection; always create/update rating
 router.post("/rating", auth.ensureLoggedIn, async (req, res) => {
   try {
     console.log("req.body:", req.body);
     const productName = (req.body.product || "").trim();
     const brandName = (req.body.brand || "").trim();
+    const productId = req.body.product_id;
 
     if (productName || brandName) {
       try {
@@ -46,18 +47,45 @@ router.post("/rating", auth.ensureLoggedIn, async (req, res) => {
       }
     }
 
-    const newReview = new Rating({
-      user_id: req.user._id,
-      user_name: req.user.name,
-      rating_value: req.body.rating_value,
-      product: req.body.product,
-      brand: req.body.brand,
-      image: req.body.image,
-      content: req.body.content,
-    });
-    console.log("newReview:", newReview);
-    const rating = await newReview.save();
-    res.send(rating);
+    // Build the query to find existing rating
+    const query = { user_id: req.user._id };
+    query.product = productName;
+    query.brand = brandName;
+
+
+    console.log("Searching for existing rating with query:", query);
+    const existingRating = await Rating.findOne(query);
+
+    if (existingRating) {
+      // Update existing rating
+      existingRating.rating_value = req.body.rating_value;
+      existingRating.content = req.body.content;
+      existingRating.product = req.body.product;
+      existingRating.brand = req.body.brand;
+      existingRating.image = req.body.image;
+      if (productId) {
+        existingRating.product_id = productId;
+      }
+
+      const updatedRating = await existingRating.save();
+      console.log("Updated existing rating:", updatedRating);
+      res.send(updatedRating);
+    } else {
+      // Create new rating
+      const newReview = new Rating({
+        user_id: req.user._id,
+        user_name: req.user.name,
+        product_id: productId, // Make sure to save product_id
+        rating_value: req.body.rating_value,
+        product: req.body.product,
+        brand: req.body.brand,
+        image: req.body.image,
+        content: req.body.content,
+      });
+      console.log("Creating new review:", newReview);
+      const rating = await newReview.save();
+      res.send(rating);
+    }
   } catch (err) {
     console.error("POST /rating error:", err);
     res.status(500).send({ error: "Failed to save rating" });

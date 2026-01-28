@@ -24,7 +24,20 @@ const Feed = () => {
   // submit new skincare review
   // modified from before to handle ratings list better
   const submitNewReview = (reviewObj) => {
-    setRatings([reviewObj].concat(ratings));
+    setRatings((prevRatings) => {
+      // Check if this review already exists (update case)
+      const existingIndex = prevRatings.findIndex(r => r._id === reviewObj._id);
+
+      if (existingIndex !== -1) {
+        // Update existing review
+        const newRatings = [...prevRatings];
+        newRatings[existingIndex] = reviewObj;
+        return newRatings;
+      } else {
+        // Add new review to the beginning
+        return [reviewObj, ...prevRatings];
+      }
+    });
   };
 
   // combine ratings into list
