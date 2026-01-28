@@ -1,4 +1,3 @@
-// modules/product-page/ProductReview.jsx
 import React from "react";
 import "./ProductReview.css";
 
@@ -7,7 +6,6 @@ const ProductReview = ({ productID, user, userReview, otherReviews, onReviewSucc
     <div className="product-review-section">
       <h2>Reviews</h2>
 
-      {/* User's Review */}
       <div className="user-review-container">
         <h3>Your Review</h3>
         {userReview && userReview.rating_value && (
@@ -25,7 +23,6 @@ const ProductReview = ({ productID, user, userReview, otherReviews, onReviewSucc
         )}
       </div>
 
-      {/* Other People's Reviews */}
       <div className="other-reviews-container">
         <h3>Customer Reviews</h3>
         {otherReviews && otherReviews.length > 0 ? (
