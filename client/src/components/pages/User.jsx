@@ -4,10 +4,8 @@ import { useParams } from "react-router-dom";
 
 import "../../utilities.css";
 import "./User.css";
-import vines from "../../assets/vines.png";
 import { Recent } from "../modules/Recent.jsx";
-import SingleReview from "../modules/SingleReview";
-import "../modules/Ratings.css"; // Import the Ratings.css
+import "../modules/Ratings.css";
 
 const User = () => {
   let userID = useParams().userID;
@@ -72,39 +70,6 @@ const User = () => {
       </div>
       <div className="space-y-4">
         <Recent />
-
-      {/* Main Content Grid */}
-      <div className="mt-10">
-        <div className="flex items-center justify-between mb-6">
-          <h4 className="text-xl font-serif italic text-slate-800">
-            Reviews
-          </h4>
-          <div className="h-[1px] flex-grow mx-4 bg-slate-200"></div>
-        </div>
-
-        <div className="space-y-4">
-          {ratings.length === 0 ? (
-            <div className="text-center py-12 text-slate-400">
-              No reviews yet!
-            </div>
-          ) : (
-            ratings.map((review) => (
-              <div key={`Review_${review._id}`} className="Review-container">
-                <SingleReview
-                  _id={review._id}
-                  content={review.content}
-                  image={review.image}
-                  product={review.product}
-                  product_id={review.product_id}
-                  brand={review.brand}
-                  rating_value={review.rating_value}
-                  creator_id={review.creator_id || userID}
-                  creator_name={review.creator_name || user.name}
-                />
-              </div>
-            ))
-          )}
-        </div>
       </div>
     </div>
   );
