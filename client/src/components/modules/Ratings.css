@@ -1,8 +1,7 @@
 .Review-container {
-  background-color: transparent;
+  background-color: var(--white);
   display: flex;
   align-items: stretch;
-
 }
 
 .Review-left,
@@ -16,14 +15,13 @@
 
 .Review-center {
   flex: 4;
-  box-shadow: 0 0 4px rgba(0, 128, 128, 0.5);
-
+  border: teal 1px solid;
   border-radius: var(--m);
 }
 
 .Review-body,
 .Review-commentSection {
-  padding: var(--s);
+  padding: var(--m) var(--l);
 }
 
 .Review-content {
@@ -46,18 +44,6 @@
   height: auto;
 }
 
-.review-body {
-  margin-top: 0.75rem;
-}
-
-.review-image {
-  margin-top: 1rem;
-  width: 40%;
-  height: 40%;
-  object-fit: cover;
-  border-radius: var(--m);
-}
-
 .Review-link {
   text-decoration: none;
   color: inherit;
@@ -69,22 +55,12 @@
   color: var(--teal);
 }
 
-/* New styles for filling comments block whitespace */
 .Review-content-wrapper {
   display: flex;
   flex-direction: column;
-  height: 100%; /* Ensure it takes full height of parent */
+  height: 100%;
 }
 
 .Review-content-wrapper > .Review-commentSection {
   flex-grow: 1;
-}
-
-.review-card {
-  width: 100%;
-  box-sizing: border-box;
-  background-color: transparent;
-  border-radius: var(--m);
-  padding: var(--s);
-  box-shadow: 0 0 4px rgba(0, 128, 128, 0.5);
 }

@@ -40,7 +40,6 @@ const SingleReview = (props) => {
         </div>
       )}
     </div>
-
   );
 };
 
