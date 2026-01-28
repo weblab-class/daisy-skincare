@@ -52,14 +52,6 @@ const Feed = () => {
 
   return (
     <div className="Feed-container relative">
-      <Link
-        to="/feed/newReview"
-        className="fixed bottom-10 right-10 w-23 h-23 bg-[#a3d0c9] text-white rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform z-30 text-3xl"
-      >
-        +
-      </Link>
-
-      <Outlet context={{ addNewReview: submitNewReview }} />
       <div className="Feed-list">{ratingsList}</div>
     </div>
   );

@@ -26,10 +26,12 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <>
       <Route path="/" element={<App />}>
-        <Route index element={<Home />}/>
-        <Route path="user/:userID" element={<User />}/>
-        <Route path="product" element={<ProductSearch />}/>
-        <Route path="product/:productID" element={<ProductPage user={User} />}/>
+        <Route index element={<Home />} />
+        <Route path="user/:userID" element={<User />} />
+        <Route path="product" element={<ProductSearch />} />
+        <Route path="product/:productID" element={<ProductPage />} />
+        <Route path="feed" element={<Feed />} />
+        <Route path="newReview" element={<Review />} />
       </Route>
 
       {/** error page routing */}

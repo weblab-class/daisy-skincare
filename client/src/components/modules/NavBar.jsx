@@ -75,7 +75,7 @@ const NavBar = (props) => {
               Home
             </Link>
             <Link
-              to="/feed/newReview"
+              to="newReview"
               onClick={() => setIsOpen(false)}
               className="hover:text-[#aed6d0]"
             >
